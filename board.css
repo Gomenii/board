@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+body {
+    margin: 0;
+}
+
+.header {
+    text-align: center;
+    background-color: #0095d9;
+}
+
+.header h1 {
+    margin: 0;
+}
+
+.header a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.main {
+    text-align: center;
+}
+
+.thread_btn,
+.new_thread_btn {
+    background: #0095d9;
+    margin: 30px;
+    cursor: pointer;
+}
+
+.account_reg_btn,
+.account_reg_cfm_btn,
+.account_reg_cpl_btn {
+    background: #0095d9;
+    margin: 0px 30px 50px 30px;
+    cursor: pointer;
+}
+
+.back_btn {
+    margin: 30px;
+}
+
+#hazimete {
+    margin: 50px 30px 0px 30px;
+}
