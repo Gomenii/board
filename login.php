@@ -18,22 +18,54 @@ require_once('fanctions.php');
 ?>
 
 <?php
-// ログイン内容の入力があれば、入力されたユーザー名でDBを検索し、データ（id, name, password, created, modified）を取得。
-if (isset($_POST)) {
+if (empty($_POST['name']) && empty($_POST['pass'])) {
+    $error = 'ログイン情報を入力してください。';
+}
+
+if (empty($_POST['name']) && !empty($_POST['pass'])) {
+    $error = '※ユーザー名が入力されていません。';
+}
+
+if (!empty($_POST['name']) && empty($_POST['pass'])) {
+    $error = '※パスワードが入力されていません。';
+}
+
+$PostInput = !empty($_POST['name']) && !empty($_POST['pass']);
+
+// 入力されたユーザー名でDBの検索を実行。データ（id, name, password, created, modified）を取得
+if ($PostInput) {
     $name = $_POST['name'];
     $stmt = $dbh->prepare('SELECT * FROM users WHERE name = :name');
     $stmt->bindValue(':name', $name, PDO::PARAM_STR);
     $res = $stmt->execute();
 }
 
-// データの取得が成功した場合、データを変数に格納。（key:カラム名　value:データ）
-if ($res = true) {
-    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+// DBの検索に成功した場合、データを変数に格納。（key:カラム名　value:データ）　失敗した場合、案内を表示
+if (isset($res)) {
+    if ($res) {
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+    } else {
+        $error = '※サーバーエラーのためしばらくお待ちいただいてから、再度ログインしてください。';
+    }
 }
 
-// パスワードが正しければ、トップページに遷移
-if (password_verify($_POST['pass'], $data['password'])) {
-    header('Location: toppage.php');
+// DBの検索結果がなかった場合、その旨を表示。
+// DBの検索結果があった場合は、入力されたパスワードがDBのハッシュ化されたパスワードと一致するか確認
+if (isset($data)) {
+    if ($data == false) {
+        $error = '※ユーザー名が違うか、登録されていません。';
+    } else {
+        $PassMatch = password_verify($_POST['pass'], $data['password']);
+    }
+}
+
+// パスワードが一致していればトップページに遷移
+if (isset($PassMatch)) {
+    if ($PassMatch) {
+        header('Location: toppage.php');
+    } else {
+        $error = '※パスワードが違います。';
+    }
 }
 
 // if (strpos($_SERVER['HTTP_REFERER'], 'thread') !== false) {
@@ -59,6 +91,7 @@ if (password_verify($_POST['pass'], $data['password'])) {
 </head>
 
 <body>
+
     <div class="header">
         <h1><a href="toppage.php">サンプル掲示板</a></h1>
     </div>
@@ -68,6 +101,9 @@ if (password_verify($_POST['pass'], $data['password'])) {
     </div>
 
     <div class="main">
+
+        <h4><?php echo $error; ?></h4>
+
         <form action="" method="POST" class="login">
             <p>ユーザー名　<input type="text" name="name" value="<?php if (isset($_POST['name'])) {
                                                                 echo htmlspecialchars($_POST['name'], ENT_QUOTES);
@@ -86,7 +122,7 @@ if (password_verify($_POST['pass'], $data['password'])) {
     <div class="main">
         <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
         <?php $host_name = $_SERVER['HTTP_HOST'];
-        if (!empty($_SERVER['HTTP_REFERER']) && (strpos($_SERVER['HTTP_REFERER'], $host_name) !== false)) : ?>
+        if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $host_name) !== false) : ?>
             <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
                 <button class="back_btn" type="button">前の画面に戻る</button>
             </a>
