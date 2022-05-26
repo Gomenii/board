@@ -56,8 +56,8 @@ if (isset($_POST['account_reg_cpl'])) {
 
     <div class="main">
         <form action="" method="POST" class="account_reg">
-            <p>ユーザー名 : <?php echo $_SESSION['name'] ?></p>
-            <p>パスワード : <?php echo $_SESSION['pass'] ?></p>
+            <p>ユーザー名 : <?php echo htmlspecialchars($_SESSION['name'], ENT_QUOTES); ?></p>
+            <p>パスワード : <?php echo htmlspecialchars($_SESSION['pass'], ENT_QUOTES); ?></p>
             <p><input type="submit" name="account_reg_cpl" value="新規登録する"></p>
         </form>
     </div>
@@ -65,7 +65,7 @@ if (isset($_POST['account_reg_cpl'])) {
     <div class="main">
         <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
         <?php $host_name = $_SERVER['HTTP_HOST'];
-        if (!empty($_SERVER['HTTP_REFERER']) && (strpos($_SERVER['HTTP_REFERER'], $host_name) !== false)) : ?>
+        if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $host_name) !== false) : ?>
             <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
                 <button class="back_btn" type="button">前の画面に戻る</button>
             </a>
