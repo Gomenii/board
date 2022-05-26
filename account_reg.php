@@ -19,7 +19,10 @@ require_once('fanctions.php');
 
 <?php
 
-// $_POSTが空（' '空文字, 0, false, NULL）ではなければ実行
+// アカウント条件
+// ユーザー名：16文字以内。英数字、記号のみ。被っていない。' '(空文字), 0, false, NULL以外。
+// パスワード：6文字以上。英数字のみ。' '(空文字)以外。
+// $_POSTが空（' '空文字, 0, false, NULL）ではなければ確認画面へ遷移
 if (isset($_POST['name']) && isset($_POST['pass'])) {
     $_SESSION['name'] = $_POST['name'];
     $_SESSION['pass'] = $_POST['pass'];
@@ -68,13 +71,17 @@ if (isset($_POST['name']) && isset($_POST['pass'])) {
 
     <div class="main">
         <h2>アカウント新規登録</h2>
-        <p>ユーザー名とパスワード（4文字以上）を入力してください。</p>
+        <p>ユーザー名とパスワード（6文字以上）を入力してください。</p>
     </div>
 
     <div class="main">
         <form action="" method="POST" class="account_reg">
-            <p>ユーザー名　<input type="text" name="name"></p>
-            <p>パスワード　<input type="text" name="pass"></p>
+            <p>ユーザー名　<input type="text" name="name" value="<?php if (isset($_POST['name'])) {
+                                                                echo htmlspecialchars($_POST['name'], ENT_QUOTES);
+                                                            } ?>"></p>
+            <p>パスワード　<input type="text" name="pass" value="<?php if (isset($_POST['pass'])) {
+                                                                echo htmlspecialchars($_POST['pass'], ENT_QUOTES);
+                                                            } ?>"></p>
             <p><input type="submit" name="account_reg_cfm_btn" value="確認画面にすすむ"></p>
         </form>
     </div>
@@ -82,7 +89,7 @@ if (isset($_POST['name']) && isset($_POST['pass'])) {
     <div class="main">
         <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
         <?php $host_name = $_SERVER['HTTP_HOST'];
-        if (!empty($_SERVER['HTTP_REFERER']) && (strpos($_SERVER['HTTP_REFERER'], $host_name) !== false)) : ?>
+        if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $host_name) !== false) : ?>
             <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
                 <button class="back_btn" type="button">前の画面に戻る</button>
             </a>
