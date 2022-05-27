@@ -22,6 +22,11 @@ body {
     text-align: center;
 }
 
+.login,
+.account_reg {
+    margin: 50px;
+}
+
 .thread_btn,
 .new_thread_btn {
     background: #0095d9;
