@@ -30,10 +30,10 @@ if (!empty($_POST['name']) && empty($_POST['pass'])) {
     $error = '※パスワードが入力されていません。';
 }
 
-$PostInput = !empty($_POST['name']) && !empty($_POST['pass']);
+$postInput = !empty($_POST['name']) && !empty($_POST['pass']);
 
 // 入力されたユーザー名でDBの検索を実行。データ（id, name, password, created, modified）を取得
-if ($PostInput) {
+if ($postInput) {
     $name = $_POST['name'];
     $stmt = $dbh->prepare('SELECT * FROM users WHERE name = :name');
     $stmt->bindValue(':name', $name, PDO::PARAM_STR);
@@ -55,13 +55,13 @@ if (isset($data)) {
     if ($data == false) {
         $error = '※ユーザー名が違うか、登録されていません。';
     } else {
-        $PassMatch = password_verify($_POST['pass'], $data['password']);
+        $passMatch = password_verify($_POST['pass'], $data['password']);
     }
 }
 
 // パスワードが一致していればトップページに遷移
-if (isset($PassMatch)) {
-    if ($PassMatch) {
+if (isset($passMatch)) {
+    if ($passMatch) {
         header('Location: toppage.php');
     } else {
         $error = '※パスワードが違います。';
@@ -119,8 +119,8 @@ if (isset($PassMatch)) {
 
     <div class="main">
         <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
-        <?php $host_name = $_SERVER['HTTP_HOST'];
-        if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $host_name) !== false) : ?>
+        <?php $hostName = $_SERVER['HTTP_HOST'];
+        if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
             <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
                 <button class="back_btn" type="button">前の画面に戻る</button>
             </a>
