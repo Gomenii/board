@@ -101,10 +101,8 @@ if (isset($PassMatch)) {
     </div>
 
     <div class="main">
-
-        <h4><?php echo $error; ?></h4>
-
         <form action="" method="POST" class="login">
+            <h4><?php echo $error; ?></h4>
             <p>ユーザー名　<input type="text" name="name" value="<?php if (isset($_POST['name'])) {
                                                                 echo htmlspecialchars($_POST['name'], ENT_QUOTES);
                                                             } ?>"></p>
