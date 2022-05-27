@@ -65,7 +65,7 @@ if (isset($_POST['account_reg_cpl'])) {
     <div class="main">
         <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
         <?php $host_name = $_SERVER['HTTP_HOST'];
-        if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $host_name) !== false) : ?>
+        if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $host_name) !== false) : ?>
             <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
                 <button class="back_btn" type="button">前の画面に戻る</button>
             </a>
