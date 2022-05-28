@@ -2,7 +2,6 @@
 session_start();
 require_once('db_board.php');
 require_once('fanctions.php');
-
 // echo var_dump($_);
 // echo var_dump($_POST);
 // echo var_dump($_SERVER);
@@ -37,18 +36,19 @@ require_once('fanctions.php');
 
     <div class="main">
         <h2>アカウント新規登録完了</h2>
-        <p>下記の内容でアカウントを登録しました。</p>
-    </div>
 
-    <div class="main">
+        <div class="account_reg">
+            <h4>下記の内容でアカウントを登録しました。</h4>
             <p>ユーザー名 : <?php echo $_SESSION['name'] ?></p>
             <p>パスワード : セキュリティ保護のため非表示</p>
+        </div>
+
     </div>
 
     <div class="main">
-            <a href="login.php">
-                <button class="login_page" type="button">ログイン画面にすすむ</button>
-            </a>
+        <a href="login.php">
+            <button class="login_page" type="button">ログイン画面にすすむ</button>
+        </a>
     </div>
 
     <div class="main">
