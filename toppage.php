@@ -36,7 +36,7 @@ require_once('fanctions.php');
     </div>
 
     <div class="main">
-        <h2>【掲示板概要】この掲示板はポートフォリオ用となっています</h2>
+        <h2>この掲示板はポートフォリオ用となっています</h2>
         <p>※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。</p>
     </div>
 
