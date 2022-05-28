@@ -63,6 +63,7 @@ if (isset($data)) {
 if (isset($passMatch)) {
     if ($passMatch) {
         header('Location: toppage.php');
+        exit();
     } else {
         $error = '※パスワードが違います。';
     }
