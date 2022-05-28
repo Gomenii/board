@@ -20,43 +20,71 @@ require_once('fanctions.php');
 <?php
 
 // アカウント条件　 
-// ユーザー名：4～16文字以内。半角 英大文字・英小文字・数字・_ 。被っていない。' '(空文字),false, NULL以外。
-// パスワード：6～16文字以内。半角 英大文字・英小文字・数字・下記記号。' '(空文字)以外。
-// パスワードに使用できる記号： ! " # $ % & ' ( ) * + - , . / : ; < = > ? @ [ ] ^ _  { | } ~　
-// $_POSTが空（' '空文字, 0, false, NULL）ではなければ確認画面へ遷移
+// ユーザー名：4～16文字以内。半角 英大文字・英小文字・数字・_ 。被っていない。空文字,false,NULL以外。
+// パスワード：6～16文字以内。半角 英大文字・英小文字・数字・下記記号。'空文字以外。
+// パスワードに使用できる記号32種類　! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ ￥ ] ^ _ ` { | } ~　
 
-$postName = $_POST['name'];
-$postPass = $_POST['pass'];
-$postInput = !empty($postPass) && !empty($postPass);
-
-if (empty($postName) && empty($postPass)) {
+// ユーザー名とパスワードの両方が入力されていない場合（入力エラー）
+if (empty($_POST['name']) && empty($_POST['pass'])) {
     $errors[] = '新規登録するユーザー名とパスワードを入力してください。<br>
               （ユーザー名 4～16文字以内、パスワード 6～16文字以内）';
+} else {
+    $postName = $_POST['name'];
+    $postPass = $_POST['pass'];
+    $postMaximum = 16;
+    $nameMinimum = 4;
+    $passMinimum = 6;
+    $nameLength = strlen($postName);
+    $passLength = strlen($postPass);
 }
 
+// ユーザー名に入力がなく、パスワードの入力があった場合（入力エラー）
 if (empty($postName) && !empty($postPass)) {
     $errors[] = '※ユーザー名が入力されていません。';
 }
 
+// ユーザー名の入力があり、パスワードに入力がなかった場合（入力エラー）
 if (!empty($postName) && empty($postPass)) {
     $errors[] = '※パスワードが入力されていません。';
 }
 
-$maximum = 16;
-$nameMinimum = 4;
-$passMinimum = 6;
-$nameLength = strlen($postName);
-$passLength = strlen($postPass);
-
-if ($postInput) {
-    if ($nameLength < $nameMinimum || $nameLength > $maximum) {
+// ユーザー名とパスワードの両方が入力がされている場合（文字数エラー）
+if (!empty($postPass) && !empty($postPass)) {
+    if ($nameLength < $nameMinimum || $nameLength > $postMaximum) {
         $errors[] = '※ユーザー名が4～16文字ではありません。';
     }
-    if ($passLength < $passMinimum || $passLength > $maximum) {
+    if ($passLength < $passMinimum || $passLength > $postMaximum) {
         $errors[] = '※パスワードが6～16文字ではありません。';
-        echo $passLength;
-        echo $nameLength;
     }
+}
+
+// ユーザー名とパスワードの両方が入力がされている場合（入力不可文字エラー）
+if (!empty($postPass) && !empty($postPass)) {
+    if (preg_match('/[^a-zA-Z0-9_]/', $postName)) {
+        $errors[] = '※ユーザー名に入力が不可能な文字が含まれています。<br>
+                    （入力可能な文字は<a href="account_reg_str.php">こちら</a>を参考にしてください。）';
+    };
+    if (preg_match('/[^!-~]/', $postPass)) {
+        $errors[] = '※パスワードに入力が不可能な文字が含まれています。<br>
+                    （入力可能な文字は<a href="account_reg_str.php">こちら</a>を参考にしてください。）';
+    }
+}
+
+// ユーザー名とパスワードの両方が入力がされている場合（先頭入力不可文字エラー）
+if (!empty($postPass) && !empty($postPass)) {
+    if (preg_match('/^[_]/', $postName)) {
+        $errors[] = '※ユーザー名の先頭に _（アンダーバー）は使用できません。<br>';
+    }
+    if (preg_match('/^[!-\/:-@[-`{-~]/', $postPass)) {
+        $errors[] = '※パスワードの先頭に 記号 は使用できません。<br>';
+    }
+}
+
+if (!isset($errors)) {
+    $_SESSION['name'] = $postName;
+    $_SESSION['pass'] = $postPass;
+    header('location: account_reg_cfm.php');
+    exit();
 }
 
 
@@ -116,8 +144,7 @@ if ($postInput) {
 
         <form action="" method="POST" class="account_reg">
             <h4><?php foreach ($errors as $error) {
-                    echo $error;
-                    echo "\n";
+                    echo $error . '<br>'. '<br>';
                 } ?></h4>
             <p>ユーザー名　<input type="text" name="name" value="<?php if (isset($_POST['name'])) {
                                                                 echo htmlspecialchars($_POST['name'], ENT_QUOTES);
@@ -128,10 +155,13 @@ if ($postInput) {
             <p><input type="submit" name="account_reg_cfm_btn" value="確認画面にすすむ"></p>
         </form>
 
-        <p>※ユーザー名とパスワードは、同じものを使用しないでください。また、第三者に推測されやすいものを設定しないでください。</p>
-        <p>ユーザー名に使える文字列 : 半角英大文字、半角英小文字、半角数字、半角 _（アンダーバーのみ）</p>
-        <p>パスワードに使える文字列 : 半角英大文字、半角英小文字、半角数字、下記半角記号30種類</p>
-        <p>! " # $ % & ' ( ) * + - , . / : ; <=> ? @ [ ] ^ _ { | } ~</p>
+        <div class="account_reg_caution">
+            <p>※登録に使用できる文字は<a href="account_reg_str.php">こちら</a>を参考にしてください。</p>
+            <p>※ユーザー名とパスワードは、同じものを使用しないでください。</p>
+            <p>※ユーザー名とパスワードは、電話番号や誕生日などの個人情報を使用しないでください。</p>
+            <p>※パスワードは、第三者に推測されやすいものを使用しないでください。（passwordやabcd1234など）</p>
+            <p>※パスワードは、他のウェブサイトで使用しているものを使い回さないでください。</p>
+        </div>
 
     </div>
 
