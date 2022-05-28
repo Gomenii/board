@@ -24,13 +24,19 @@ body {
 
 .login,
 .account_reg {
-    margin: 50px;
+    margin: 3%;
+}
+
+.account_reg_caution,
+.account_reg_str {
+    text-align: left;
+    margin: 3% 15% 3% 15%;
 }
 
 .thread_btn,
 .new_thread_btn {
     background: #0095d9;
-    margin: 30px;
+    margin: 3%;
     cursor: pointer;
 }
 
@@ -38,14 +44,14 @@ body {
 .account_reg_cfm_btn,
 .account_reg_cpl_btn {
     background: #0095d9;
-    margin: 0px 30px 50px 30px;
+    margin: 0% 3% 3% 3%;
     cursor: pointer;
 }
 
 .back_btn {
-    margin: 30px;
+    margin: 3%;
 }
 
 #hazimete {
-    margin: 50px 30px 0px 30px;
+    margin: 3% 3% 0% 3%;
 }
