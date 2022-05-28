@@ -18,17 +18,25 @@ require_once('fanctions.php');
 ?>
 
 <?php
+
+// $_POSTが空（NULL）&& 前のページのアドレスが新規登録画面ではない場合、エラー画面に遷移 
+$a = 'http://localhost/board/account_reg.php';
+if (!isset($_POST['account_reg_cpl']) && $_SERVER['HTTP_REFERER'] != $a) {
+    header('Location: error.php');
+    exit();
+}
+
 // $_POSTが空（NULL）ではなければ、DB登録処理を実行し、完了画面に遷移
 if (isset($_POST['account_reg_cpl'])) {
-    $name = $_SESSION['name'];
-    $pass = password_hash($_SESSION['pass'], PASSWORD_BCRYPT);
+$name = $_SESSION['name'];
+$pass = password_hash($_SESSION['pass'], PASSWORD_BCRYPT);
 
-    $stmt = $dbh->prepare('INSERT INTO users (name, password) VALUES (:name, :password)');
-    $stmt->bindValue(':name', $name, PDO::PARAM_STR);
-    $stmt->bindValue(':password', $pass, PDO::PARAM_STR);
-    $stmt->execute();
-    header('Location: account_reg_cpl.php');
-    exit();
+$stmt = $dbh->prepare('INSERT INTO users (name, password) VALUES (:name, :password)');
+$stmt->bindValue(':name', $name, PDO::PARAM_STR);
+$stmt->bindValue(':password', $pass, PDO::PARAM_STR);
+$stmt->execute();
+header('Location: account_reg_cpl.php');
+exit();
 }
 ?>
 
@@ -51,11 +59,11 @@ if (isset($_POST['account_reg_cpl'])) {
 
     <div class="main">
         <h2>アカウント新規登録確認</h2>
-        <p>下記の内容でアカウントを登録します。</p>
     </div>
 
     <div class="main">
         <form action="" method="POST" class="account_reg">
+            <h4>下記の内容でアカウントを登録します。</h4>
             <p>ユーザー名 : <?php echo htmlspecialchars($_SESSION['name'], ENT_QUOTES); ?></p>
             <p>パスワード : <?php echo htmlspecialchars($_SESSION['pass'], ENT_QUOTES); ?></p>
             <p><input type="submit" name="account_reg_cpl" value="新規登録する"></p>
