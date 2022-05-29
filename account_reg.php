@@ -147,10 +147,10 @@ if (!isset($errors)) {
                     echo $error . '<br>'. '<br>';
                 } ?></h4>
             <p>ユーザー名　<input type="text" name="name" value="<?php if (isset($_POST['name'])) {
-                                                                echo htmlspecialchars($_POST['name'], ENT_QUOTES);
+                                                                htmlsc($_POST['name']);
                                                             } ?>"></p>
             <p>パスワード　<input type="text" name="pass" value="<?php if (isset($_POST['pass'])) {
-                                                                echo htmlspecialchars($_POST['pass'], ENT_QUOTES);
+                                                                htmlsc($_POST['pass']);
                                                             } ?>"></p>
             <p><input type="submit" name="account_reg_cfm_btn" value="確認画面にすすむ"></p>
         </form>

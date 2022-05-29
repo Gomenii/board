@@ -64,8 +64,8 @@ exit();
     <div class="main">
         <form action="" method="POST" class="account_reg">
             <h4>下記の内容でアカウントを登録します。</h4>
-            <p>ユーザー名 : <?php echo htmlspecialchars($_SESSION['name'], ENT_QUOTES); ?></p>
-            <p>パスワード : <?php echo htmlspecialchars($_SESSION['pass'], ENT_QUOTES); ?></p>
+            <p>ユーザー名 : <?php htmlsc($_SESSION['name']); ?></p>
+            <p>パスワード : <?php htmlsc($_SESSION['pass']); ?></p>
             <p><input type="submit" name="account_reg_cpl" value="新規登録する"></p>
         </form>
     </div>
