@@ -1,8 +1,12 @@
 <?php
-var_dump(htmlspecialchars("<a href='test'>Test</a>",ENT_QUOTES));
+require_once('fanctions.php');
 
-// $a = 
-// echo var_dump($a);
+// $c = 1 + 1;
+// if (is_bool($c == 2)) {
+//     echo is_bool($c == 2);
+//     return true;
+// }
+
 ?>
 
 
@@ -10,6 +14,7 @@ var_dump(htmlspecialchars("<a href='test'>Test</a>",ENT_QUOTES));
 
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,6 +23,7 @@ var_dump(htmlspecialchars("<a href='test'>Test</a>",ENT_QUOTES));
     <link rel="stylesheet" type="text/css" href="xxxxx.css">
     <title>タイトル</title>
 </head>
+
 <body>
     <div class="header">
 
@@ -29,4 +35,5 @@ var_dump(htmlspecialchars("<a href='test'>Test</a>",ENT_QUOTES));
 
     </div>
 </body>
+
 </html>
