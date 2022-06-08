@@ -18,7 +18,7 @@ require_once('fanctions.php');
 
 
 // 新規アカウント条件　 
-// ユーザー名：4～16文字以内。半角 英大文字・英小文字・数字・アンダーバー。　空文字,false,NULL以外。被っていない。
+// ユーザー名：4～16文字以内。半角 英大文字・英小文字・数字・アンダーバー。　空文字,false,NULL以外。重複していない。
 // パスワード：6～16文字以内。半角 英大文字・英小文字・数字・下記記号。　　　空文字以外。
 // パスワードに使用できる記号32種類　! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ ￥ ] ^ _ ` { | } ~　
 
@@ -52,6 +52,24 @@ if (isset($postName)) {
     }
 } else {
     $errors[] = '※ユーザー名を入力してください（半角英数字とアンダーバー 4～16文字以内）';
+}
+
+// ユーザー名の重複エラー処理
+if (isset($postName) && !isset($errors)) {
+    $stmt = $dbh->prepare('SELECT * FROM users WHERE name = :name');
+    $stmt->bindValue(':name', $postName, PDO::PARAM_STR);
+    $res = $stmt->execute();
+    if ($res) {
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+    } else {
+        $errors[] = '※サーバーエラーのためしばらくお待ちいただいてから、再度ログインしてください。';
+    }
+}
+if (isset($data)) {
+    if ($data !== false) {
+        $errors[] = '※このユーザー名は、すでに他のユーザーに使用されています。<br>
+                    他のユーザー名をご登録ください。';
+    }
 }
 
 // パスワードのエラー処理
