@@ -15,25 +15,18 @@ require_once('fanctions.php');
 // echo var_dump($_SERVER['HTTP_HOST']);
 // echo var_dump($_SERVER['HTTP_REFERER']);
 // echo var_dump(strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']));
-?>
 
-<?php
-if (empty($_POST['name']) && empty($_POST['pass'])) {
-    $error = 'ログイン情報を入力してください。';
+
+if (empty($_POST['name'])) {
+    $errors[] = '※ユーザー名を入力してください';
 }
 
-if (empty($_POST['name']) && !empty($_POST['pass'])) {
-    $error = '※ユーザー名が入力されていません。';
+if (empty($_POST['pass'])) {
+    $errors[] = '※パスワードを入力してください';
 }
-
-if (!empty($_POST['name']) && empty($_POST['pass'])) {
-    $error = '※パスワードが入力されていません。';
-}
-
-$postInput = !empty($_POST['name']) && !empty($_POST['pass']);
 
 // 入力されたユーザー名でDBの検索を実行。データ（id, name, password, created, modified）を取得
-if ($postInput) {
+if (!empty($_POST['name']) && !empty($_POST['pass'])) {
     $name = $_POST['name'];
     $stmt = $dbh->prepare('SELECT * FROM users WHERE name = :name');
     $stmt->bindValue(':name', $name, PDO::PARAM_STR);
@@ -45,17 +38,16 @@ if (isset($res)) {
     if ($res) {
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
     } else {
-        $error = '※サーバーエラーのためしばらくお待ちいただいてから、再度ログインしてください。';
+        $errors[] = '※サーバーエラーのためしばらくお待ちいただいてから、再度ログインしてください。';
     }
 }
 
-// DBの検索結果がなかった場合、その旨を表示。
 // DBの検索結果があった場合は、入力されたパスワードがDBのハッシュ化されたパスワードと一致するか確認
 if (isset($data)) {
-    if ($data == false) {
-        $error = '※ユーザー名が違うか、登録されていません。';
-    } else {
+    if ($data !== false) {
         $passMatch = password_verify($_POST['pass'], $data['password']);
+    } else {
+        $errors[] = '※ユーザー名が違うか、登録されていません。';
     }
 }
 
@@ -65,18 +57,9 @@ if (isset($passMatch)) {
         header('Location: toppage.php');
         exit();
     } else {
-        $error = '※パスワードが違います。';
+        $errors[] = '※パスワードが違います。';
     }
 }
-
-// if (strpos($_SERVER['HTTP_REFERER'], 'thread') !== false) {
-//     $http_r = $_SERVER['HTTP_REFERER'];
-//     header('location: $http_r');
-// } else {
-//     echo strpos($_SERVER['HTTP_REFERER'], 'thread');
-//     header('Location: toppage.php');
-// }
-
 ?>
 
 <!DOCTYPE html>
@@ -103,7 +86,9 @@ if (isset($passMatch)) {
 
     <div class="main">
         <form action="" method="POST" class="login">
-            <h4><?php echo $error; ?></h4>
+            <h4><?php foreach ($errors as $error) {
+                    echo $error . '<br>' . '<br>';
+                } ?></h4>
             <p>ユーザー名　<input type="text" name="name" value="<?php if (isset($_POST['name'])) {
                                                                 htmlsc($_POST['name']);
                                                             } ?>"></p>
