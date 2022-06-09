@@ -28,8 +28,8 @@ if (!isset($_POST['account_reg_cpl']) && $_SERVER['HTTP_REFERER'] != $a) {
 
 // $_POSTが空（NULL）ではなければ、DB登録処理を実行し、完了画面に遷移
 if (isset($_POST['account_reg_cpl'])) {
-$name = $_SESSION['name'];
-$pass = password_hash($_SESSION['pass'], PASSWORD_BCRYPT);
+$name = $_SESSION['newName'];
+$pass = password_hash($_SESSION['newPass'], PASSWORD_BCRYPT);
 
 $stmt = $dbh->prepare('INSERT INTO users (name, password) VALUES (:name, :password)');
 $stmt->bindValue(':name', $name, PDO::PARAM_STR);
@@ -64,8 +64,8 @@ exit();
     <div class="main">
         <form action="" method="POST" class="account_reg">
             <h4>下記の内容でアカウントを登録します。</h4>
-            <p>ユーザー名 : <?php htmlsc($_SESSION['name']); ?></p>
-            <p>パスワード : <?php htmlsc($_SESSION['pass']); ?></p>
+            <p>ユーザー名 : <?php htmlsc($_SESSION['newName']); ?></p>
+            <p>パスワード : <?php htmlsc($_SESSION['newPass']); ?></p>
             <p><input type="submit" name="account_reg_cpl" value="新規登録する"></p>
         </form>
     </div>

@@ -90,8 +90,8 @@ if (isset($postPass)) {
 
 // エラーがない場合は確認画面に遷移
 if (!isset($errors)) {
-    $_SESSION['name'] = $postName;
-    $_SESSION['pass'] = $postPass;
+    $_SESSION['newName'] = $postName;
+    $_SESSION['newPass'] = $postPass;
     header('location: account_reg_cfm.php');
     exit();
 }
