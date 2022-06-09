@@ -49,9 +49,9 @@ if (!isset($display)) {
             btn.addEventListener('click', () => {
                 nav.classList.toggle('open-menu')
                 if (btn.innerHTML === 'Menu') {
-                  btn.innerHTML = 'Close';
+                    btn.innerHTML = 'Close';
                 } else {
-                  btn.innerHTML = 'Menu';
+                    btn.innerHTML = 'Menu';
                 }
             });
         });
@@ -64,11 +64,11 @@ if (!isset($display)) {
         <button class="menu_btn">Menu</button>
         <nav class="menu_list">
             <ul>
-                <li><a href="#">トップページ</a></li>
-                <li><a href="#">マイページ</a></li>
-                <li><a href="#">ログアウト</a></li>
-                <li><a href="#">お問い合わせ</a></li>
-                <li><a href="#">運営者情報</a></li>
+                <li><a href="toppage.php">トップページ</a></li>
+                <li><a href="mypage.php">マイページ</a></li>
+                <li><a href="logout_cfm.php">ログアウト</a></li>
+                <li><a href="inquiry.php">お問い合わせ</a></li>
+                <li><a href="admin.php">運営者情報</a></li>
             </ul>
         </nav>
     </div>
