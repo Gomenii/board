@@ -16,6 +16,10 @@ require_once('fanctions.php');
 // echo var_dump($_SERVER['HTTP_REFERER']);
 // echo var_dump(strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']));
 
+if (isset($_SESSION['loginName'])) {
+    $display = '【ログイン中】';
+}
+
 if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 15) {
     unset($_SESSION['loginName'], $_SESSION['loginPass']);
     $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
@@ -127,11 +131,11 @@ if (!isset($errors)) {
                     echo $error . '<br>' . '<br>';
                 } ?></h4>
             <p>タイトル <textarea name="title" cols="40" rows="2" value="<?php if (isset($_GET['title'])) {
-                                                                htmlsc($_GET['title']);
-                                                            } ?>"></textarea></p>
+                                                                            htmlsc($_GET['title']);
+                                                                        } ?>"></textarea></p>
             <p>　内容　 <textarea name="content" cols="40" rows="10" value="<?php if (isset($_GET['content'])) {
-                                                                htmlsc($_GET['content']);
-                                                            } ?>"></textarea></p>
+                                                                            htmlsc($_GET['content']);
+                                                                        } ?>"></textarea></p>
             <p><input type="submit" name="cfm" value="確認画面にすすむ"></p>
         </form>
 
