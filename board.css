@@ -35,23 +35,73 @@ body {
 
 .thread_btn,
 .new_thread_btn {
-    background: #0095d9;
     margin: 3%;
+    padding: 5px;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    background: #0095d9;
     cursor: pointer;
 }
 
 .account_reg_btn,
 .account_reg_cfm_btn,
 .account_reg_cpl_btn {
-    background: #0095d9;
     margin: 0% 3% 3% 3%;
+    padding: 5px;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    background: #0095d9;
     cursor: pointer;
 }
 
 .back_btn {
     margin: 3%;
+    padding: 5px;
 }
 
 #hazimete {
     margin: 3% 3% 0% 3%;
 }
+
+/* メニュー */
+ul {
+    padding-left: 5%;
+}
+
+li {
+    margin: 5%;
+    list-style: none;
+}
+
+.menu_btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px;
+    border: none;
+    border-radius: 6px;
+    color: #0095d9;
+    background-color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+nav {
+    background: #0095d9;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    overflow-x: hidden;
+    text-align: left;
+    width: 0;
+    transition: .5s;
+  }
+  
+  /* メニューを開いた時 */
+  nav.open-menu {
+    width: 30%;
+    height: 100%;
+  }
