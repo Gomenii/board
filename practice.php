@@ -7,6 +7,13 @@ require_once('fanctions.php');
 //     return true;
 // }
 
+
+// 使えるフォーマット
+date_default_timezone_set('Asia/Tokyo');
+date('Y/m/d G:i:s');
+
+
+
 ?>
 
 
