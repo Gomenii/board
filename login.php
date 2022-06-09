@@ -54,6 +54,8 @@ if (isset($data)) {
 // パスワードが一致していればトップページに遷移
 if (isset($passMatch)) {
     if ($passMatch) {
+        $_SESSION['loginName'] = $_POST['name'];
+        $_SESSION['loginPass'] = $_POST['pass'];
         header('Location: toppage.php');
         exit();
     } else {
