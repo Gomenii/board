@@ -13,7 +13,7 @@
             const btn = document.querySelector('.menu_btn');
             const nav = document.querySelector('nav');
             btn.addEventListener('click', () => {
-                nav.classList.toggle('open-menu')
+                nav.classList.toggle('open_menu')
                 if (btn.innerHTML === 'Menu') {
                     btn.innerHTML = 'Close';
                 } else {
@@ -26,7 +26,7 @@
 
 <body>
     <div class="header">
-        <h1><a href="toppage.php">サンプル掲示板</a></h1>
+        <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
         <nav class="menu_list">
             <ul>
@@ -40,11 +40,9 @@
     </div>
 
     <div class="main">
-        <h2>ログアウト確認</h2>
-    </div>
-
-    <div class="footer">
-
+        <div class="head">
+            <h2 class="head_title">ログアウト確認</h2>
+        </div>
     </div>
 </body>
 

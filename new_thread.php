@@ -109,7 +109,7 @@ if (!isset($errors)) {
 
 <body>
     <div class="header">
-        <h1><a href="toppage.php">サンプル掲示板</a></h1>
+    <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
         <nav class="menu_list">
             <ul>
@@ -123,37 +123,26 @@ if (!isset($errors)) {
     </div>
 
     <div class="main">
-        <h2>スレッド作成</h2>
-        <?php echo $display; ?>
 
-        <form action="" method="get" class="thread">
+        <div class="head">
+            <h2 class="head_title">スレッド作成</h2>
+            <?php echo $display; ?>
+        </div>
+
+        <div class="post">
             <h4><?php foreach ($errors as $error) {
                     echo $error . '<br>' . '<br>';
                 } ?></h4>
-            <p>タイトル <textarea name="title" cols="40" rows="2" value="<?php if (isset($_GET['title'])) {
-                                                                            htmlsc($_GET['title']);
-                                                                        } ?>"></textarea></p>
-            <p>　内容　 <textarea name="content" cols="40" rows="10" value="<?php if (isset($_GET['content'])) {
-                                                                            htmlsc($_GET['content']);
-                                                                        } ?>"></textarea></p>
-            <p><input type="submit" name="cfm" value="確認画面にすすむ"></p>
-        </form>
-
-    </div>
-
-    <div class="main">
-        <a href="new_thread.php">
-            <button class="new_thread_btn" type="button">スレッド作成</button>
-        </a>
-    </div>
-
-    <div class="main">
-        <a href="thread1.php">
-            <button class="thread_btn" type="button">スレッド1</button>
-        </a>
-    </div>
-
-    <div class="footer">
+            <form class="post-form" action="" method="get" class="thread">
+                <p>タイトル <textarea name="title" cols="40" rows="2" value="<?php if (isset($_GET['title'])) {
+                                                                                htmlsc($_GET['title']);
+                                                                            } ?>"></textarea></p>
+                <p>　内容　 <textarea name="content" cols="40" rows="10" value="<?php if (isset($_GET['content'])) {
+                                                                                htmlsc($_GET['content']);
+                                                                            } ?>"></textarea></p>
+                <p><input class="btn" type="submit" name="cfm" value="確認画面にすすむ"></p>
+            </form>
+        </div>
 
     </div>
 </body>

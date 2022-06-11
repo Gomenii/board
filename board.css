@@ -4,12 +4,14 @@ body {
     margin: 0;
 }
 
+
+/* ヘッダー */
 .header {
     text-align: center;
     background-color: #0095d9;
 }
 
-.header h1 {
+.header_title {
     margin: 0;
 }
 
@@ -18,19 +20,31 @@ body {
     text-decoration: none;
 }
 
+
+/* メイン */
 .main {
     text-align: center;
 }
 
-.login,
-.account_reg {
-    margin: 3%;
+.post,
+.conttent {
+    padding: 2%;
+}
+
+.post_error {
+    margin: 0;
 }
 
 .account_reg_caution,
 .account_reg_str {
     text-align: left;
     margin: 3% 15% 3% 15%;
+}
+
+
+/* ボタン */
+.btn {
+    cursor: pointer;
 }
 
 .thread_btn,
@@ -41,36 +55,36 @@ body {
     border-radius: 6px;
     color: #fff;
     background: #0095d9;
-    cursor: pointer;
 }
 
-.account_reg_btn,
-.account_reg_cfm_btn,
-.account_reg_cpl_btn {
+.new_account_btn {
     margin: 0% 3% 3% 3%;
     padding: 5px;
     border: none;
     border-radius: 6px;
     color: #fff;
     background: #0095d9;
-    cursor: pointer;
 }
 
-.back_btn {
-    margin: 3%;
-    padding: 5px;
+.back-btn,
+.login_page_btn {
+    margin: 5%;
 }
 
+.account_reg_btn {
+    margin: 0% 3% 3% 3%;
+}
 #hazimete {
-    margin: 3% 3% 0% 3%;
+    margin: 0;
 }
+
 
 /* メニュー */
-ul {
+.menu_list ul {
     padding-left: 5%;
 }
 
-li {
+.menu_list li {
     margin: 5%;
     list-style: none;
 }
@@ -101,7 +115,7 @@ nav {
   }
   
   /* メニューを開いた時 */
-  nav.open-menu {
+  nav.open_menu {
     width: 30%;
     height: 100%;
   }

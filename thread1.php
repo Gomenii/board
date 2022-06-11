@@ -47,7 +47,7 @@ if (!isset($display)) {
             const btn = document.querySelector('.menu_btn');
             const nav = document.querySelector('nav');
             btn.addEventListener('click', () => {
-                nav.classList.toggle('open-menu')
+                nav.classList.toggle('open_menu')
                 if (btn.innerHTML === 'Menu') {
                     btn.innerHTML = 'Close';
                 } else {
@@ -60,7 +60,7 @@ if (!isset($display)) {
 
 <body>
     <div class="header">
-        <h1><a href="toppage.php">サンプル掲示板</a></h1>
+        <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
         <nav class="menu_list">
             <ul>
@@ -74,25 +74,23 @@ if (!isset($display)) {
     </div>
 
     <div class="main">
-        <h2>この掲示板はポートフォリオ用となっています</h2>
-        <?php echo $display; ?>
-    </div>
 
-    <div class="main">
-        <a href="new_thread.php">
-            <button class="new_thread_btn" type="button">スレッド作成</button>
-        </a>
-    </div>
+        <div class="head">
+            <h2 class="head_title">この掲示板はポートフォリオ用となっています</h2>
+            <?php echo $display; ?>
+        </div>
 
-    <div class="main">
-        <a href="thread1.php">
-            <button class="thread_btn" type="button">スレッド1</button>
-        </a>
-    </div>
-
-    <div class="footer">
+        <div class="conttent">
+            <p><a href="new_thread.php">
+                <button class="new_thread_btn" type="button">スレッド作成</button>
+            </a></p>
+            <a href="thread1.php">
+                <button class="thread_btn" type="button">スレッド1</button>
+            </a>
+        </div>
 
     </div>
+
 </body>
 
 </html>

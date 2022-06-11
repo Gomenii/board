@@ -28,15 +28,15 @@ if (!isset($_POST['account_reg_cpl']) && $_SERVER['HTTP_REFERER'] != $a) {
 
 // $_POSTが空（NULL）ではなければ、DB登録処理を実行し、完了画面に遷移
 if (isset($_POST['account_reg_cpl'])) {
-$name = $_SESSION['newName'];
-$pass = password_hash($_SESSION['newPass'], PASSWORD_BCRYPT);
+    $name = $_SESSION['newName'];
+    $pass = password_hash($_SESSION['newPass'], PASSWORD_BCRYPT);
 
-$stmt = $dbh->prepare('INSERT INTO users (name, password) VALUES (:name, :password)');
-$stmt->bindValue(':name', $name, PDO::PARAM_STR);
-$stmt->bindValue(':password', $pass, PDO::PARAM_STR);
-$stmt->execute();
-header('Location: account_reg_cpl.php');
-exit();
+    $stmt = $dbh->prepare('INSERT INTO users (name, password) VALUES (:name, :password)');
+    $stmt->bindValue(':name', $name, PDO::PARAM_STR);
+    $stmt->bindValue(':password', $pass, PDO::PARAM_STR);
+    $stmt->execute();
+    header('Location: account_reg_cpl.php');
+    exit();
 }
 ?>
 
@@ -50,44 +50,61 @@ exit();
     <meta name="description" content="sample text">
     <link rel="stylesheet" type="text/css" href="board.css">
     <title>アカウント新規登録確認</title>
+    <script type="text/javascript">
+        window.addEventListener('DOMContentLoaded', () => {
+            const btn = document.querySelector('.menu_btn');
+            const nav = document.querySelector('nav');
+            btn.addEventListener('click', () => {
+                nav.classList.toggle('open_menu')
+                if (btn.innerHTML === 'Menu') {
+                    btn.innerHTML = 'Close';
+                } else {
+                    btn.innerHTML = 'Menu';
+                }
+            });
+        });
+    </script>
 </head>
 
 <body>
     <div class="header">
-        <h1><a href="toppage.php">掲示板</a></h1>
+        <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
+        <button class="menu_btn">Menu</button>
+        <nav class="menu_list">
+            <ul>
+                <li><a href="toppage.php">トップページ</a></li>
+                <li><a href="mypage.php">マイページ</a></li>
+                <li><a href="logout_cfm.php">ログアウト</a></li>
+                <li><a href="inquiry.php">お問い合わせ</a></li>
+                <li><a href="admin.php">運営者情報</a></li>
+            </ul>
+        </nav>
     </div>
 
     <div class="main">
-        <h2>アカウント新規登録確認</h2>
-    </div>
 
-    <div class="main">
-        <form action="" method="POST" class="account_reg">
-            <h4>下記の内容でアカウントを登録します。</h4>
-            <p>ユーザー名 : <?php htmlsc($_SESSION['newName']); ?></p>
-            <p>パスワード : <?php htmlsc($_SESSION['newPass']); ?></p>
-            <p><input type="submit" name="account_reg_cpl" value="新規登録する"></p>
-        </form>
-    </div>
+        <div class="head">
+            <h2 class="head_title">アカウント新規登録確認</h2>
+        </div>
 
-    <div class="main">
-        <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
-        <?php $hostName = $_SERVER['HTTP_HOST'];
-        if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
-            <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
-                <button class="back_btn" type="button">前の画面に戻る</button>
-            </a>
-        <?php endif; ?>
-    </div>
+        <div class="post">
+            <form class="post_form" action="" method="POST">
+                <h4>下記の内容でアカウントを登録します。</h4>
+                <p>ユーザー名 : <?php htmlsc($_SESSION['newName']); ?></p>
+                <p>パスワード : <?php htmlsc($_SESSION['newPass']); ?></p>
+                <p><input class="btn account_reg_btn" type="submit" name="account_reg_cpl" value="新規登録する"></p>
+            </form>
+        </div>
 
-
-
-
-    <div class="main">
-    </div>
-
-    <div class="footer">
-    </div>
+        <div class="bottom">
+            <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
+            <?php $hostName = $_SERVER['HTTP_HOST'];
+            if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
+                <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
+                    <button class="btn back_btn" type="button">前の画面に戻る</button>
+                </a>
+            <?php endif; ?>
+        </div>
 
 </body>
 
