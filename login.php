@@ -16,10 +16,6 @@ if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
 }
 $_SESSION['start'] = time();
 
-if ($loginJudge == '未ログイン') {
-    $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
-}
-
 // 入力判定
 if (empty($_POST['name'])) {
     $errors[] = '※ユーザー名を入力してください';
@@ -115,6 +111,9 @@ if (isset($passMatch)) {
 
         <div class="head">
             <h2 class="head_title">ログインする</h2>
+            <?php if (isset($display)) {
+                echo $display;
+            } ?>
         </div>
 
         <div class="post">
