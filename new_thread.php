@@ -70,8 +70,8 @@ if (isset($getContent)) {
 
 // エラーがない場合は確認画面に遷移
 if (!isset($errors)) {
-    $_SESSION['title'] = $getTitle;
-    $_SESSION['content'] = $getContent;
+    $_SESSION['title'] = $_GET['title'];
+    $_SESSION['content'] = $_GET['content'];
     header('location: new_thread_cfm.php');
     exit();
 }
@@ -131,15 +131,15 @@ if (!isset($errors)) {
 
         <div class="post">
             <h4 class="post_error"><?php foreach ($errors as $error) {
-                    echo $error . '<br>' . '<br>';
-                } ?></h4>
+                                        echo $error . '<br>' . '<br>';
+                                    } ?></h4>
             <form class="post_form" action="" method="get">
-                <p>　タイトル　<textarea name="title" cols="40" rows="2" value="<?php if (isset($_GET['title'])) {
-                                                                                htmlsc($_GET['title']);
-                                                                            } ?>"></textarea></p>
-                <p>　　内容　　<textarea name="content" cols="40" rows="10" value="<?php if (isset($_GET['content'])) {
-                                                                                    htmlsc($_GET['content']);
-                                                                                } ?>"></textarea></p>
+                <p>　タイトル　<textarea name="title" cols="40" rows="2"><?php if (isset($_GET['title'])) {
+                                                                        htmlsc($_GET['title']);
+                                                                    } ?></textarea></p>
+                <p>　　内容　　<textarea name="content" cols="40" rows="10"><?php if (isset($_GET['content'])) {
+                                                                            htmlsc($_GET['content']);
+                                                                        } ?></textarea></p>
                 <p><input class="btn" type="submit" name="cfm" value="確認画面にすすむ"></p>
             </form>
         </div>
