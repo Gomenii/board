@@ -20,6 +20,41 @@ if ($loginJudge == '未ログイン') {
     $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
 }
 
+
+
+
+// スレッド表示用の格納
+// 入力されたユーザー名でDBの検索を実行。データ（id, name, password, created, modified）を取得
+$stmt = $dbh->prepare('SELECT id FROM threads ORDER BY id DESC LIMIT 1');
+$stmt->execute();
+$id = $stmt->fetch(PDO::FETCH_ASSOC);
+
+var_dump($id);
+
+for ($count = $id; $count > 0; $count--) {
+    echo $count;
+    $stmt = $dbh->prepare('SELECT * FROM threads WHERE id = :id');
+    $stmt->bindValue(':id', $count, PDO::PARAM_STR);
+    $stmt->execute();
+    $data[] = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+var_dump($data);
+
+// for ($count = 10; $count > 0; $count--){
+//     echo $count;
+// }
+
+// DBの検索に成功した場合、データを変数に格納。（key:カラム名　value:データ）　失敗した場合、案内を表示
+if (isset($res)) {
+    if ($res) {
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+    } else {
+        $errors[] = '※サーバーエラーのためしばらくお待ちいただいてから、再度ログインしてください。';
+    }
+}
+
+
+
 ?>
 
 
@@ -72,12 +107,20 @@ if ($loginJudge == '未ログイン') {
             <?php if (isset($display)) {
                 echo $display;
             } ?>
-        </div>
-        
-        <div class="content">
             <p><a href="new_thread.php">
                     <button class="btn blue_btn new_thread_btn" type="button">スレッド作成</button>
                 </a></p>
+        </div>
+
+        <div class="content">
+            <?php foreach ($errors as $error) {
+                echo $error . '<br>' . '<br>';
+            } ?>
+
+
+
+
+
             <a href="thread1.php">
                 <button class="btn blue_btn thread_btn" type="button">スレッド1</button>
             </a>
