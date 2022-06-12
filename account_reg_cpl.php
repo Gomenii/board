@@ -64,7 +64,7 @@ require_once('fanctions.php');
             <h2 class="head_title">アカウント新規登録完了</h2>
         </div>
 
-        <div class="conttent">
+        <div class="content">
             <h4>下記の内容でアカウントを登録しました。</h4>
             <p>ユーザー名 : <?php echo $_SESSION['newName'] ?></p>
             <p>パスワード : セキュリティ保護のため非表示</p>
