@@ -20,40 +20,41 @@ if ($loginJudge == '未ログイン') {
     $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
 }
 
-
-
-
-// スレッド表示用の格納
-// 入力されたユーザー名でDBの検索を実行。データ（id, name, password, created, modified）を取得
-$stmt = $dbh->prepare('SELECT id FROM threads ORDER BY id DESC LIMIT 1');
+$stmt = $dbh->prepare('SELECT * FROM threads ORDER BY id DESC LIMIT 30');
 $stmt->execute();
-$id = $stmt->fetch(PDO::FETCH_ASSOC);
+$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-var_dump($id);
+// for ($a = 0; $a < $data[0]['id']; $a++) {
+//     echo '<br>' . 'スレッドNo.' . $data[$a]['id'] . '　作成者：' . $data[$a]['name'] . '　作成日時：' . $data[$a]['created'] . '<br>';
+//     echo 'タイトル：　' . $data[$a]['title'] . '<br>';
+//     echo '　内容　：　' . $data[$a]['content'] . '<br>';
+// }
 
-for ($count = $id; $count > 0; $count--) {
-    echo $count;
-    $stmt = $dbh->prepare('SELECT * FROM threads WHERE id = :id');
-    $stmt->bindValue(':id', $count, PDO::PARAM_STR);
-    $stmt->execute();
-    $data[] = $stmt->fetch(PDO::FETCH_ASSOC);
-}
-var_dump($data);
+// foreach($data as $key => $array){
+//     foreach($array as $key2 =>$val){
+//     echo $val. '<br>';
+//     }
+// }
+
+
+// レコードをidの降順に並び替えてから、10件のレコードを取得
+// $stmt = $dbh->prepare('SELECT * FROM threads ORDER BY id DESC LIMIT 10');
+// $stmt->execute();
+// $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+// for ($count = $id; $count > 0; $count--) {
+//     echo $count;
+//     $stmt = $dbh->prepare('SELECT * FROM threads WHERE id = :id');
+//     $stmt->bindValue(':id', $count, PDO::PARAM_STR);
+//     $stmt->execute();
+//     $data[] = $stmt->fetch(PDO::FETCH_ASSOC);
+// }
+// var_dump($data);
 
 // for ($count = 10; $count > 0; $count--){
 //     echo $count;
 // }
-
-// DBの検索に成功した場合、データを変数に格納。（key:カラム名　value:データ）　失敗した場合、案内を表示
-if (isset($res)) {
-    if ($res) {
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
-    } else {
-        $errors[] = '※サーバーエラーのためしばらくお待ちいただいてから、再度ログインしてください。';
-    }
-}
-
-
 
 ?>
 
@@ -113,17 +114,24 @@ if (isset($res)) {
         </div>
 
         <div class="content">
-            <?php foreach ($errors as $error) {
-                echo $error . '<br>' . '<br>';
-            } ?>
+            <div class="content_threads">
+                <?php
+                for ($a = 0; $a < $data[0]['id']; $a++) {
+                    echo '<br>' . 'タイトル：　' . '<a href="thread' . $data[$a]['id'] . '.php">' . $data[$a]['title'] . '</a>' . '<br>';
+                    echo '作成者：' . $data[$a]['name'] . '　作成日時：' . $data[$a]['created'] . '<br>' . '<br>';
+                }
+                ?>
+            </div>
+        </div>
 
-
-
-
-
-            <a href="thread1.php">
-                <button class="btn blue_btn thread_btn" type="button">スレッド1</button>
-            </a>
+        <div class="bottom">
+            <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
+            <?php $hostName = $_SERVER['HTTP_HOST'];
+            if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
+                <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
+                    <button class="btn back_btn" type="button">前の画面に戻る</button>
+                </a>
+            <?php endif; ?>
         </div>
 
     </div>
