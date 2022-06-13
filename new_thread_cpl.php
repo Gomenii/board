@@ -19,6 +19,33 @@ $_SESSION['start'] = time();
 if ($loginJudge == '未ログイン') {
     $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
 }
+
+// レコードをidの降順（新しい順）に並び替えてから1件のレコードを取得
+$stmt = $dbh->prepare('SELECT * FROM threads ORDER BY id DESC LIMIT 1');
+$stmt->execute();
+$data = $stmt->fetch(PDO::FETCH_ASSOC);
+$threadId = $data['id'];
+$threadTitle = $data['title'];
+
+// 書き込みファイル読み込み
+$files = file_get_contents('thread.php');
+
+// スレッドidを加えてファイル名に
+$fileName = 'thread' . $threadId . '.php';
+
+// 書き込みオリジナルファイルから変更点を置き換える
+$files = str_replace("スレッドタイトル", $threadTitle, $files);
+$files = str_replace("kakikae", $threadId, $files);
+
+// 文字コードをUTFに変換
+$files = mb_convert_encoding($files, "UTF-8", "AUTO");
+
+// ファイル生成＆書き込み
+$handle = fopen($fileName, 'w');
+
+fwrite($handle, $files);
+fclose($handle);
+
 ?>
 
 
@@ -77,6 +104,9 @@ if ($loginJudge == '未ログイン') {
             <h4>下記の内容でスレッドを作成しました。</h4>
             <p>タイトル: <?php echo $_SESSION['title'] ?></p>
             <p>　内容　: <?php echo $_SESSION['content'] ?></p>
+            <p><a href="<?php echo $fileName ?>">
+                <button class="btn" type="button">作成したスレッドへ</button>
+            </a></p>
             <a href="toppage.php">
                 <button class="btn" type="button">トップページへ</button>
             </a>
