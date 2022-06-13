@@ -49,7 +49,7 @@ if (isset($getTitle)) {
     if ($getTitle = 0 || $titleLength > $titleMaximum) {
         $errors[] = '※タイトルが1～32文字ではありません。';
     }
-    if ($getTitle = "") {
+    if (empty($_GET['title'])) {
         $errors[] = '※タイトルが空白です。';
     }
 } else {
@@ -61,7 +61,7 @@ if (isset($getContent)) {
     if ($getContent = 0 || $contentLength > $contentMaximum) {
         $errors[] = '※内容が1～1000文字ではありません。';
     }
-    if ($getContent = "") {
+    if (empty($_GET['content'])) {
         $errors[] = '※内容が空白です。';
     }
 } else {
