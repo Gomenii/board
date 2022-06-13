@@ -12,7 +12,19 @@ require_once('fanctions.php');
 date_default_timezone_set('Asia/Tokyo');
 date('Y/m/d G:i:s');
 
+// 保管用
+$stmt = $dbh->prepare('SELECT id FROM threads ORDER BY id DESC LIMIT 1');
+$stmt->execute();
+$newestID = $stmt->fetch(PDO::FETCH_COLUMN);
+$pageCount = ceil($newestID / 10);
 
+for ($count = 1; $count <= $pageCount; $count++) {
+    $pages[] = $count;
+}
+
+foreach ($pages as $page) {
+    echo '<a href=toppage.' . $page . 'php>' . $page . '</a>　';
+}
 
 ?>
 
