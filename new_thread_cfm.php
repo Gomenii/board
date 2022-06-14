@@ -104,9 +104,13 @@ if ($loginJudge == 'ログイン中' && isset($_GET['cfm'])) {
             <h4><?php foreach ($errors as $error) {
                     echo $error . '<br>' . '<br>';
                 } ?></h4>
-            <form class="post_form" action="" method="get" class="thread">
-                <p>タイトル:<?php echo $_SESSION['title'] ?></p>
-                <p>　内容　:<?php echo $_SESSION['content'] ?></p>
+            <form action="" method="get">
+                <div class="content_threads">
+                    <p>【タイトル】</p>
+                    <p><?php echo $_SESSION['title'] ?></p>
+                    <p><br>【内容】</p>
+                    <p><?php echo $_SESSION['content'] ?></p>
+                </div>
                 <p><input class="btn blue_btn" type="submit" name="cfm" value="スレッドを作成する"></p>
             </form>
         </div>
