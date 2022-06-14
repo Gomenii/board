@@ -20,7 +20,7 @@ if ($loginJudge == '未ログイン') {
     $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
 }
 
-
+// ファイル生成時に割り振られたスレッドidを元に、スレッド情報を取得
 $threadid = 'kakikae';
 
 $stmt = $dbh->prepare('SELECT * FROM threads WHERE id = :id');
@@ -85,17 +85,18 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
         <div class="content">
             <div class="content_threads">
                 <?php
-                echo 'スレッドNo.' . $data['id'] . '　作成者：' . $data['name'] . '<br>' . '<br>';
-                echo 'タイトル：　' . $data['title'] . '</a>' . '<br>';
-                echo '　内容　：　' . $data['content'] . '<br>' . '<br>';
-                echo '作成日時：' . $data['created'];
+                echo 'スレッドNo.' . $data['id'] . '　作成者：' . $data['name'] . '　作成日時：' . $data['created'] . '<br>' . '<br>';
+                echo '【タイトル】' . '<br>';
+                echo $data['title'] . '</a>' . '<br>' . '<br>';
+                echo '【内容】' . '<br>';
+                echo $data['content'] ;
                 ?>
             </div>
         </div>
 
         <div class="bottom">
             <p><a href="toppage.php">
-                <button class="btn" type="button">トップページへ</button></p>
+                    <button class="btn" type="button">トップページへ</button></p>
             </a>
             <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
             <?php $hostName = $_SERVER['HTTP_HOST'];
