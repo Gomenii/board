@@ -42,7 +42,6 @@ $files = mb_convert_encoding($files, "UTF-8", "AUTO");
 
 // ファイル生成＆書き込み
 $handle = fopen($fileName, 'w');
-
 fwrite($handle, $files);
 fclose($handle);
 
@@ -102,11 +101,15 @@ fclose($handle);
 
         <div class="content">
             <h4>下記の内容でスレッドを作成しました。</h4>
-            <p>タイトル: <?php echo $_SESSION['title'] ?></p>
-            <p>　内容　: <?php echo $_SESSION['content'] ?></p>
+            <div class="content_threads">
+                <p>【タイトル】</p>
+                <p><?php echo $_SESSION['title'] ?></p>
+                <p><br>【内容】</p>
+                <p><?php echo $_SESSION['content'] ?></p>
+            </div>
             <p><a href="<?php echo $fileName ?>">
-                <button class="btn" type="button">作成したスレッドへ</button>
-            </a></p>
+                    <button class="btn" type="button">作成したスレッドへ</button>
+                </a></p>
             <a href="toppage.php">
                 <button class="btn" type="button">トップページへ</button>
             </a>
