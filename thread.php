@@ -86,8 +86,6 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
             <div class="content_threads">
                 <?php
                 echo 'スレッドNo.' . $data['id'] . '　作成者：' . $data['name'] . '　作成日時：' . $data['created'] . '<br>' . '<br>';
-                echo '【タイトル】' . '<br>';
-                echo $data['title'] . '</a>' . '<br>' . '<br>';
                 echo '【内容】' . '<br>';
                 echo $data['content'] ;
                 ?>
