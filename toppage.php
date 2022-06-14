@@ -20,41 +20,9 @@ if ($loginJudge == '未ログイン') {
     $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
 }
 
-$stmt = $dbh->prepare('SELECT * FROM threads ORDER BY id DESC LIMIT 30');
+$stmt = $dbh->prepare('SELECT * FROM threads ORDER BY id DESC LIMIT 50');
 $stmt->execute();
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// for ($a = 0; $a < $data[0]['id']; $a++) {
-//     echo '<br>' . 'スレッドNo.' . $data[$a]['id'] . '　作成者：' . $data[$a]['name'] . '　作成日時：' . $data[$a]['created'] . '<br>';
-//     echo 'タイトル：　' . $data[$a]['title'] . '<br>';
-//     echo '　内容　：　' . $data[$a]['content'] . '<br>';
-// }
-
-// foreach($data as $key => $array){
-//     foreach($array as $key2 =>$val){
-//     echo $val. '<br>';
-//     }
-// }
-
-
-// レコードをidの降順に並び替えてから、10件のレコードを取得
-// $stmt = $dbh->prepare('SELECT * FROM threads ORDER BY id DESC LIMIT 10');
-// $stmt->execute();
-// $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-// for ($count = $id; $count > 0; $count--) {
-//     echo $count;
-//     $stmt = $dbh->prepare('SELECT * FROM threads WHERE id = :id');
-//     $stmt->bindValue(':id', $count, PDO::PARAM_STR);
-//     $stmt->execute();
-//     $data[] = $stmt->fetch(PDO::FETCH_ASSOC);
-// }
-// var_dump($data);
-
-// for ($count = 10; $count > 0; $count--){
-//     echo $count;
-// }
 
 ?>
 
@@ -117,8 +85,10 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="content_threads">
                 <?php
                 for ($a = 0; $a < $data[0]['id']; $a++) {
-                    echo '<br>' . 'タイトル：　' . '<a href="thread' . $data[$a]['id'] . '.php">' . $data[$a]['title'] . '</a>' . '<br>';
-                    echo '作成者：' . $data[$a]['name'] . '　作成日時：' . $data[$a]['created'] . '<br>' . '<br>';
+                    if (isset($data[$a])) {
+                        echo '【タイトル】' . '<a href="thread' . $data[$a]['id'] . '.php">' . mb_strimwidth($data[$a]['title'], 0, 64, '...', 'UTF-8')  . '</a>'. '<br>';
+                        echo '作成者：' . $data[$a]['name'] . '　作成日時：' . $data[$a]['created'] . '<br>'. '<br>'. '<br>';
+                    }
                 }
                 ?>
             </div>
