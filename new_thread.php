@@ -20,8 +20,9 @@ if ($loginJudge == '未ログイン') {
     $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
 }
 
-// スレッド作成条件　 
-// ログイン必須　タイトル：1～32文字以内　内容：1～1000文字以内
+// スレッド作成条件　 ※ログイン必須
+// タイトル：1～32文字以内（全角）　1～128文字以内（半角）　
+// 内容：1～1000文字以内（全角）1～4000文字以内（半角）
 
 // ログインエラー処理
 if (isset($_GET['title']) || isset($_GET['content'])) {
@@ -33,23 +34,23 @@ if (isset($_GET['title']) || isset($_GET['content'])) {
 // タイトルの入力があれば変数に格納
 if (isset($_GET['title'])) {
     $getTitle = $_GET['title'];
-    $titleMaximum = 32;
+    $titleMaximum = 128;
     $titleLength = strlen($getTitle);
 }
 
 // 内容の入力があれば変数に格納
 if (isset($_GET['content'])) {
     $getContent = $_GET['content'];
-    $contentMaximum = 1000;
+    $contentMaximum = 4000;
     $contentLength = strlen($getContent);
 }
 
 // タイトルのエラー処理
 if (isset($getTitle)) {
-    if ($getTitle = 0 || $titleLength > $titleMaximum) {
+    if ($getTitle == 0 || $titleLength > $titleMaximum) {
         $errors[] = '※タイトルが1～32文字ではありません。';
     }
-    if (empty($_GET['title'])) {
+    if (empty($getTitle)) {
         $errors[] = '※タイトルが空白です。';
     }
 } else {
@@ -58,10 +59,10 @@ if (isset($getTitle)) {
 
 // 内容のエラー処理
 if (isset($getContent)) {
-    if ($getContent = 0 || $contentLength > $contentMaximum) {
+    if ($getContent == 0 || $contentLength > $contentMaximum) {
         $errors[] = '※内容が1～1000文字ではありません。';
     }
-    if (empty($_GET['content'])) {
+    if (empty($getContent)) {
         $errors[] = '※内容が空白です。';
     }
 } else {
@@ -70,8 +71,8 @@ if (isset($getContent)) {
 
 // エラーがない場合は確認画面に遷移
 if (!isset($errors)) {
-    $_SESSION['title'] = $_GET['title'];
-    $_SESSION['content'] = $_GET['content'];
+    $_SESSION['title'] = htmlsc($_GET['title']);
+    $_SESSION['content'] = nl2br(htmlsc($_GET['content']));
     header('location: new_thread_cfm.php');
     exit();
 }
@@ -124,6 +125,7 @@ if (!isset($errors)) {
 
         <div class="head">
             <h2 class="head_title">スレッド作成</h2>
+            <!-- <h4>セキュリティ対策のため、右記5種の半角記号を使用すると文字化けが起きる仕様となっています。 < > & " '</h4> -->
             <?php if (isset($display)) {
                 echo $display;
             } ?>
@@ -134,12 +136,8 @@ if (!isset($errors)) {
                                         echo $error . '<br>' . '<br>';
                                     } ?></h4>
             <form class="post_form" action="" method="get">
-                <p>　タイトル　<textarea name="title" cols="40" rows="2"><?php if (isset($_GET['title'])) {
-                                                                        htmlsc($_GET['title']);
-                                                                    } ?></textarea></p>
-                <p>　　内容　　<textarea name="content" cols="40" rows="10"><?php if (isset($_GET['content'])) {
-                                                                            htmlsc($_GET['content']);
-                                                                        } ?></textarea></p>
+                <p>　タイトル　<textarea name="title" cols="40" rows="2"></textarea></p>
+                <p>　　内容　　<textarea name="content" cols="40" rows="10"></textarea></p>
                 <p><input class="btn" type="submit" name="cfm" value="確認画面にすすむ"></p>
             </form>
         </div>
