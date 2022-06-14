@@ -2,19 +2,6 @@
 session_start();
 require_once('db_board.php');
 require_once('fanctions.php');
-// echo var_dump($_);
-// echo var_dump($_POST);
-// echo var_dump($_SERVER);
-// echo var_dump($_SESSION);
-// echo var_dump($_COOKIE);
-
-// echo var_dump($_POST['name']);
-// echo var_dump($_POST['pass']);
-// echo var_dump($_SESSION['name']);
-// echo var_dump($_SESSION['pass']);
-// echo var_dump($_SERVER['HTTP_HOST']);
-// echo var_dump($_SERVER['HTTP_REFERER']);
-// echo var_dump(strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']));
 ?>
 
 <!DOCTYPE html>

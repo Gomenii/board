@@ -2,20 +2,6 @@
 session_start();
 require_once('db_board.php');
 require_once('fanctions.php');
-// echo var_dump($_);
-// echo var_dump($_POST);
-// echo var_dump($_SERVER);
-// echo var_dump($_SESSION);
-// echo var_dump($_COOKIE);
-
-// echo var_dump($_POST['name']);
-// echo var_dump($_POST['pass']);
-// echo var_dump($_SESSION['name']);
-// echo var_dump($_SESSION['pass']);
-// echo var_dump($_SERVER['HTTP_HOST']);
-// echo var_dump($_SERVER['HTTP_REFERER']);
-// echo var_dump(strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']));
-
 
 // 新規アカウント条件　 
 // ユーザー名：4～16文字以内。半角 英大文字・英小文字・数字・アンダーバー。　空文字,false,NULL以外。重複していない。
@@ -150,12 +136,8 @@ if (!isset($errors)) {
                 <h4><?php foreach ($errors as $error) {
                         echo $error . '<br>' . '<br>';
                     } ?></h4>
-                <p>ユーザー名　<input type="text" name="name" value="<?php if (isset($_POST['name'])) {
-                                                                    htmlsc($_POST['name']);
-                                                                } ?>"></p>
-                <p>パスワード　<input type="text" name="pass" value="<?php if (isset($_POST['pass'])) {
-                                                                    htmlsc($_POST['pass']);
-                                                                } ?>"></p>
+                <p>ユーザー名　<input type="text" name="name" value=""></p>
+                <p>パスワード　<input type="text" name="pass" value=""></p>
                 <p><input class="btn account_reg_btn" type="submit" name="account_reg_cfm_btn" value="確認画面にすすむ"></p>
             </form>
         </div>

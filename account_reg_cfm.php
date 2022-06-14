@@ -2,22 +2,6 @@
 session_start();
 require_once('db_board.php');
 require_once('fanctions.php');
-// echo var_dump($_);
-// echo var_dump($_POST);
-// echo var_dump($_SERVER);
-// echo var_dump($_SESSION);
-// echo var_dump($_COOKIE);
-
-// echo var_dump($_POST['name']);
-// echo var_dump($_POST['pass']);
-// echo var_dump($_SESSION['name']);
-// echo var_dump($_SESSION['pass']);
-// echo var_dump($_SERVER['HTTP_HOST']);
-// echo var_dump($_SERVER['HTTP_REFERER']);
-// echo var_dump(strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']));
-?>
-
-<?php
 
 // $_POSTが空（NULL）&& 前のページのアドレスが新規登録画面ではない場合、エラー画面に遷移 
 $a = 'http://localhost/board/account_reg.php';
@@ -90,8 +74,8 @@ if (isset($_POST['account_reg_cpl'])) {
         <div class="post">
             <form class="post_form" action="" method="POST">
                 <h4>下記の内容でアカウントを登録します。</h4>
-                <p>ユーザー名 : <?php htmlsc($_SESSION['newName']); ?></p>
-                <p>パスワード : <?php htmlsc($_SESSION['newPass']); ?></p>
+                <p>ユーザー名 : <?php echo $_SESSION['newName']; ?></p>
+                <p>パスワード : <?php echo $_SESSION['newPass']; ?></p>
                 <p><input class="btn account_reg_btn" type="submit" name="account_reg_cpl" value="新規登録する"></p>
             </form>
         </div>
