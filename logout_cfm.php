@@ -21,7 +21,9 @@ if (isset($_GET['cfm'])) {
     if ($loginJudge == '未ログイン') {
         $error = '※ログインされていません。';
     } else {
-        unset($_SESSION['loginName'], $_SESSION['loginPass']);
+        foreach ($_SESSION as $key => $val) {
+            unset($_SESSION[$key], $_SESSION[$val]);
+        }
         header('location: logout_cpl.php');
         exit();
     }
