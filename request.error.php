@@ -62,9 +62,12 @@ if (isset($_SESSION['loginName'])) {
         <div class="content">
             <p>不正なリクエストを検知しました。</p>
             <p>お手数ですが<a href="login.php">再ログイン</a>後、最初からやり直してください。</p>
-            <p><a href="toppage.php">
-                    <button class="btn" type="button">トップページへ</button>
-                </a></p>
+        </div>
+
+        <div class="bottom">
+            <a href="toppage.php">
+                <button class="btn" type="button">トップページへ</button>
+            </a>
         </div>
 
     </div>
