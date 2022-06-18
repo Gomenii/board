@@ -46,17 +46,6 @@ body {
     margin: 0;
 }
 
-.post_form p {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.content_threads {
-    text-align: left;
-    margin-left: 40%;
-}
-
 .account_reg_caution,
 .account_reg_str {
     text-align: left;
