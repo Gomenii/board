@@ -21,13 +21,12 @@ if ($loginJudge == '未ログイン') {
 }
 
 // ファイル生成時に割り振られたスレッドidを元に、スレッド情報を取得
-$threadid = 'kakikae';
+$threadid = 'okikae';
 
 $stmt = $dbh->prepare('SELECT * FROM threads WHERE id = :id');
 $stmt->bindValue(':id', $threadid, PDO::PARAM_STR);
 $stmt->execute();
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
-
 ?>
 
 
@@ -40,7 +39,7 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="sample text">
     <link rel="stylesheet" type="text/css" href="board.css">
-    <title>スレッドタイトル</title>
+    <title><?php echo $data['title'] ?></title>
     <script type="text/javascript">
         window.addEventListener('DOMContentLoaded', () => {
             const btn = document.querySelector('.menu_btn');
@@ -76,7 +75,7 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
     <div class="main">
 
         <div class="head">
-            <h2>スレッドタイトル</h2>
+            <h2><?php echo $data['title'] ?></h2>
             <?php if (isset($display)) {
                 echo $display;
             } ?>
