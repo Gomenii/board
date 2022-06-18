@@ -62,7 +62,10 @@ if (isset($_SESSION['loginName'])) {
 
         <div class="content">
             <h4>ログアウトが完了しました。</h4>
-                <a href="toppage.php"><button class="btn back_btn" type="button">トップページへ</button></a>
+        </div>
+
+        <div class="bottom">
+            <a href="toppage.php"><button class="btn" type="button">トップページへ</button></a>
         </div>
 
     </div>

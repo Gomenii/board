@@ -81,10 +81,10 @@ if ($loginJudge == '未ログイン') {
             } ?>
         </div>
 
-        <div class="post">
-            <h4 class="post_error"><?php echo $message; ?></h4>
-            <form class="post_form" action="" method="get">
-                <p><input class="btn red_btn" type="submit" name="cfm" value="ログアウトする"></p>
+        <div class="content">
+            <h4><?php echo $message; ?></h4>
+            <form class="content_center" action="" method="get">
+                <p><input class="btn btn_red" type="submit" name="cfm" value="ログアウトする"></p>
             </form>
         </div>
 
@@ -93,7 +93,7 @@ if ($loginJudge == '未ログイン') {
             <?php $hostName = $_SERVER['HTTP_HOST'];
             if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
                 <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
-                    <button class="btn back_btn" type="button">前の画面に戻る</button>
+                    <button class="btn" type="button">前の画面に戻る</button>
                 </a>
             <?php endif; ?>
         </div>

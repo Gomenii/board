@@ -77,21 +77,19 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 echo $display;
             } ?>
             <p><a href="new_thread.php">
-                    <button class="btn blue_btn new_thread_btn" type="button">スレッド作成</button>
+                    <button class="btn btn_blue" type="button">スレッド作成</button>
                 </a></p>
         </div>
 
         <div class="content">
-            <div class="content_threads">
                 <?php
                 for ($a = 0; $a < $data[0]['id']; $a++) {
                     if (isset($data[$a])) {
-                        echo '【タイトル】' . '<a href="thread' . $data[$a]['id'] . '.php">' . mb_strimwidth($data[$a]['title'], 0, 64, '...', 'UTF-8')  . '</a>'. '<br>';
+                        echo 'タイトル：' . '<a href="thread' . $data[$a]['id'] . '.php">' . mb_strimwidth($data[$a]['title'], 0, 64, '...', 'UTF-8')  . '</a>'. '<br>';
                         echo '作成者：' . $data[$a]['name'] . '　作成日時：' . $data[$a]['created'] . '<br>'. '<br>'. '<br>';
                     }
                 }
                 ?>
-            </div>
         </div>
 
         <div class="bottom">
@@ -99,7 +97,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php $hostName = $_SERVER['HTTP_HOST'];
             if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
                 <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
-                    <button class="btn back_btn" type="button">前の画面に戻る</button>
+                    <button class="btn" type="button">前の画面に戻る</button>
                 </a>
             <?php endif; ?>
         </div>

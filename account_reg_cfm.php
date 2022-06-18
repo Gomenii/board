@@ -3,15 +3,22 @@ session_start();
 require_once('db_board.php');
 require_once('fanctions.php');
 
+// ログイン判定
+if (isset($_SESSION['loginName'])) {
+    $loginJudge = 'ログイン中';
+} else {
+    $loginJudge = '未ログイン';
+}
+
 // $_POSTが空（NULL）&& 前のページのアドレスが新規登録画面ではない場合、エラー画面に遷移 
 $a = 'http://localhost/board/account_reg.php';
-if (!isset($_POST['account_reg_cpl']) && $_SERVER['HTTP_REFERER'] != $a) {
+if (!isset($_POST['account_reg_btn']) && $_SERVER['HTTP_REFERER'] != $a) {
     header('Location: error.php');
     exit();
 }
 
 // $_POSTが空（NULL）ではなければ、DB登録処理を実行し、完了画面に遷移
-if (isset($_POST['account_reg_cpl'])) {
+if (isset($_POST['account_reg_btn'])) {
     $name = $_SESSION['newName'];
     $pass = password_hash($_SESSION['newPass'], PASSWORD_BCRYPT);
 
@@ -54,6 +61,7 @@ if (isset($_POST['account_reg_cpl'])) {
     <div class="header">
         <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
+        <p><?php echo $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
                 <li><a href="toppage.php">トップページ</a></li>
@@ -71,12 +79,12 @@ if (isset($_POST['account_reg_cpl'])) {
             <h2 class="head_title">アカウント新規登録確認</h2>
         </div>
 
-        <div class="post">
-            <form class="post_form" action="" method="POST">
+        <div class="content">
+            <form class="content_center" action="" method="POST">
                 <h4>下記の内容でアカウントを登録します。</h4>
                 <p>ユーザー名 : <?php echo $_SESSION['newName']; ?></p>
                 <p>パスワード : <?php echo $_SESSION['newPass']; ?></p>
-                <p><input class="btn account_reg_btn" type="submit" name="account_reg_cpl" value="新規登録する"></p>
+                <p><input class="btn btn_blue" type="submit" name="account_reg_btn" value="新規登録する"></p>
             </form>
         </div>
 
@@ -85,7 +93,7 @@ if (isset($_POST['account_reg_cpl'])) {
             <?php $hostName = $_SERVER['HTTP_HOST'];
             if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
                 <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
-                    <button class="btn back_btn" type="button">前の画面に戻る</button>
+                    <button class="btn" type="button">前の画面に戻る</button>
                 </a>
             <?php endif; ?>
         </div>

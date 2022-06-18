@@ -2,6 +2,13 @@
 session_start();
 require_once('db_board.php');
 require_once('fanctions.php');
+
+// ログイン判定
+if (isset($_SESSION['loginName'])) {
+    $loginJudge = 'ログイン中';
+} else {
+    $loginJudge = '未ログイン';
+}
 ?>
 
 <!DOCTYPE html>
@@ -34,6 +41,7 @@ require_once('fanctions.php');
     <div class="header">
         <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
+        <p><?php echo $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
                 <li><a href="toppage.php">トップページ</a></li>
@@ -52,11 +60,12 @@ require_once('fanctions.php');
         </div>
 
         <div class="content">
-            <h4>下記の内容でアカウントを登録しました。</h4>
-            <p>ユーザー名 : <?php echo $_SESSION['newName'] ?></p>
-            <p>パスワード : セキュリティ保護のため非表示</p>
+            <h4>アカウントを登録しました。</h4>
+        </div>
+
+        <div class="bottom">
             <a href="login.php">
-                <button class="btn login_page_btn" type="button">ログイン画面にすすむ</button>
+                <button class="btn btn_blue" type="button">ログイン画面へ</button>
             </a>
         </div>
 

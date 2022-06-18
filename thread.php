@@ -100,7 +100,7 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
             <?php $hostName = $_SERVER['HTTP_HOST'];
             if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
                 <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
-                    <button class="btn back_btn" type="button">前の画面に戻る</button>
+                    <button class="btn" type="button">前の画面に戻る</button>
                 </a>
             <?php endif; ?>
         </div>

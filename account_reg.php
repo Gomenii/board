@@ -3,6 +3,13 @@ session_start();
 require_once('db_board.php');
 require_once('fanctions.php');
 
+// ログイン判定
+if (isset($_SESSION['loginName'])) {
+    $loginJudge = 'ログイン中';
+} else {
+    $loginJudge = '未ログイン';
+}
+
 // 新規アカウント条件　 
 // ユーザー名：4～16文字以内。半角 英大文字・英小文字・数字・アンダーバー。　空文字,false,NULL以外。重複していない。
 // パスワード：6～16文字以内。半角 英大文字・英小文字・数字・下記記号。　　　空文字以外。
@@ -114,6 +121,7 @@ if (!isset($errors)) {
     <div class="header">
         <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
+        <p><?php echo $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
                 <li><a href="toppage.php">トップページ</a></li>
@@ -131,18 +139,15 @@ if (!isset($errors)) {
             <h2 class="head_title">アカウント新規登録</h2>
         </div>
 
-        <div class="post">
-            <form class="post_form" action="" method="POST">
+        <div class="content">
+            <form class="content_center" action="" method="POST">
                 <h4><?php foreach ($errors as $error) {
                         echo $error . '<br>' . '<br>';
                     } ?></h4>
                 <p>ユーザー名　<input type="text" name="name" value=""></p>
                 <p>パスワード　<input type="text" name="pass" value=""></p>
-                <p><input class="btn account_reg_btn" type="submit" name="account_reg_cfm_btn" value="確認画面にすすむ"></p>
+                <p><input class="btn btn_blue" type="submit" name="account_reg_btn" value="確認画面にすすむ"></p>
             </form>
-        </div>
-
-        <div class="account_reg_caution">
             <h4>【注意事項】</h4>
             <p>※登録に使用できる文字は<a href="account_reg_str.php" target="_blank" rel="noopener noreferrer">こちら</a>を参考にしてください。</p>
             <p>※ユーザー名とパスワードは、同じものを使用しないでください。</p>
@@ -156,7 +161,7 @@ if (!isset($errors)) {
             <?php $hostName = $_SERVER['HTTP_HOST'];
             if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
                 <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
-                    <button class="btn back_btn" type="button">前の画面に戻る</button>
+                    <button class="btn" type="button">前の画面に戻る</button>
                 </a>
             <?php endif; ?>
         </div>

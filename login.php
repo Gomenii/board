@@ -116,24 +116,24 @@ if (isset($passMatch)) {
             } ?>
         </div>
 
-        <div class="post">
-            <h4 class="post_error"><?php foreach ($errors as $error) {
-                                        echo $error . '<br>' . '<br>';
-                                    } ?></h4>
-            <form class="post_form" action="" method="POST">
+        <div class="content">
+            <h4><?php foreach ($errors as $error) {
+                    echo $error . '<br>' . '<br>';
+                } ?></h4>
+            <form class="content_center" action="" method="POST">
                 <p>ユーザー名　<input type="text" name="name" value="<?php if (isset($_POST['name'])) {
                                                                     htmlsc($_POST['name']);
                                                                 } ?>"></p>
                 <p>パスワード　<input type="text" name="pass" value="<?php if (isset($_POST['pass'])) {
-                                                                            htmlsc($_POST['pass']);
-                                                                        } ?>"></p>
-                <p><input class="btn" type="submit" name="login" value="ログイン"></p>
+                                                                    htmlsc($_POST['pass']);
+                                                                } ?>"></p>
+                <p><input class="btn btn_small btn_blue" type="submit" name="login" value="ログイン"></p>
             </form>
         </div>
 
         <p id="hazimete">はじめての方はこちら</p>
         <a href="account_reg.php">
-            <button class="btn blue_btn new_account_btn" type="button">新規登録</button>
+            <button class="btn btn_small btn_blue" type="button">新規登録</button>
         </a>
 
         <div class="bottom">
@@ -141,7 +141,7 @@ if (isset($passMatch)) {
             <?php $hostName = $_SERVER['HTTP_HOST'];
             if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
                 <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
-                    <button class="btn back_btn" type="button">前の画面に戻る</button>
+                    <button class="btn" type="button">前の画面に戻る</button>
                 </a>
             <?php endif; ?>
         </div>

@@ -44,7 +44,7 @@
             <h2 class="head_title">アカウント新規登録に使える文字</h2>
         </div>
 
-        <div class="account_reg_str">
+        <div class="content">
             <h4>ユーザー名に使える文字</h4>
             <ul>
                 <li>半角英大文字（A ~ Z）</li>
@@ -52,13 +52,10 @@
                 <li>半角数字（0 ~ 9）</li>
                 <li>半角アンダーバー（ _ ）</li>
             </ul>
-            <p></p>
             <p>※他のユーザーと同じ名前は使用できません。</p>
             <p>※先頭に _（アンダーバー）は使用できません。</p>
-            <p>※空白（スペース）は使用できません。</p>
-        </div>
+            <p>※空白（スペース）は使用できません。</p><br>
 
-        <div class="account_reg_str">
             <h4>パスワードに使える文字</h4>
             <ul>
                 <li>半角英大文字（A ~ Z）</li>
@@ -70,17 +67,15 @@
             <p>※空白（スペース）は使用できません。</p>
         </div>
 
-    </div>
-
-    <div class="main">
-        <a href="account_reg.php">
-            <button class="back_btn" type="button">前の画面に戻る</button>
-        </a>
-    </div>
-
-    <div class="footer">
+        <div class="bottom">
+            <a href="account_reg.php">
+                <button class="btn" type="button">前の画面に戻る</button>
+            </a>
+        </div>
 
     </div>
+
+
 </body>
 
 </html>

@@ -37,58 +37,72 @@ body {
     text-align: center;
 }
 
-.post,
 .content {
-    margin-top: 3%;
-}
-
-.post_error {
-    margin: 0;
-}
-
-.account_reg_caution,
-.account_reg_str {
+    /* margin: 30px; */
+    display: inline-block;    
     text-align: left;
-    margin: 3% 15% 3% 15%;
 }
+
+.content_center {
+    text-align: center;
+}
+
+.bottom {
+    margin: 30px;
+}
+
+#hazimete {
+    margin: 3% 0 0 0;
+}
+
+
 
 
 /* ボタン */
 .btn {
+    width: 120px;
+    margin: 10px;
     padding: 3px;
+    color: #333;
+    background-color: #ccc;
+    border: none;
+    border-radius: 30px;
     cursor: pointer;
 }
 
-.blue_btn {
+.btn:hover {
+    text-decoration: none;
+    background-color: #bbbbbb;
+}
+
+.btn_small {
+    width: 80px;
+}
+
+.btn_big {
+    width: 140px;
+}
+
+.btn_blue {
     border: none;
     color: #fff;
     background-color: #0095d9;
 }
 
-.red_btn {
+.btn_blue:hover {
+    text-decoration: none;
+    background-color: #008bcc;
+}
+
+.btn_red {
     border: none;
     color: #f00;
     background-color: #f4c7c3;
 }
 
-.thread_btn,
-.new_thread_btn {
-    margin: 3%;
-    border-radius: 6px;
-}
-
-.back_btn,
-.login_page_btn {
-    margin: 3%;
-}
-
-.new_account_btn,
-.account_reg_btn {
-    margin: 0 3% 3% 3%;
-}
-
-#hazimete {
-    margin: 0;
+.btn_red:hover {
+    text-decoration: none;
+    background-color: #f59b93;
 }
 
 
