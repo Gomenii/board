@@ -25,7 +25,6 @@ $stmt = $dbh->prepare('SELECT * FROM threads ORDER BY id DESC LIMIT 1');
 $stmt->execute();
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
 $threadId = $data['id'];
-$threadTitle = $data['title'];
 
 // 書き込みファイル読み込み
 $files = file_get_contents('thread.php');
@@ -34,8 +33,7 @@ $files = file_get_contents('thread.php');
 $fileName = 'thread' . $threadId . '.php';
 
 // 書き込みオリジナルファイルから変更点を置き換える
-$files = str_replace("スレッドタイトル", $threadTitle, $files);
-$files = str_replace("kakikae", $threadId, $files);
+$files = str_replace("okikae", $threadId, $files);
 
 // 文字コードをUTFに変換
 $files = mb_convert_encoding($files, "UTF-8", "AUTO");
@@ -100,20 +98,21 @@ fclose($handle);
         </div>
 
         <div class="content">
-            <h4>下記の内容でスレッドを作成しました。</h4>
-            <div class="content_threads">
-                <p>【タイトル】</p>
-                <p><?php echo $_SESSION['title'] ?></p>
-                <p><br>【内容】</p>
-                <p><?php echo $_SESSION['content'] ?></p>
+            <div class="content_center">
+                <h4>スレッドを作成しました。</h4>
+                <p>※ブラウザの戻るボタンなどで、前の画面に戻らないでください。</p>
+                <p><a href="<?php echo $fileName ?>">
+                        <button class="btn btn_big btn_blue" type="button">作成したスレッドへ</button>
+                    </a></p>
             </div>
-            <p><a href="<?php echo $fileName ?>">
-                    <button class="btn" type="button">作成したスレッドへ</button>
-                </a></p>
+        </div>
+
+        <div class="bottom">
             <a href="toppage.php">
                 <button class="btn" type="button">トップページへ</button>
             </a>
         </div>
+
 
     </div>
 
