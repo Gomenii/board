@@ -16,11 +16,12 @@ if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
 }
 $_SESSION['start'] = time();
 
-// ログインエラー処理
-if (isset($_GET['cfm'])) {
-    if ($loginJudge == '未ログイン') {
-        $error = '※ログインされていません。';
-    } else {
+// ログインエラー処理・ログアウト処理
+if ($loginJudge == '未ログイン') {
+    $message = '※ログインされていません。';
+} else {
+    $message = '本当にログアウトしますか？';
+    if (isset($_GET['cfm'])) {
         $_SESSION = array();
         header('location: logout_cpl.php');
         exit();
@@ -81,10 +82,7 @@ if (isset($_GET['cfm'])) {
         </div>
 
         <div class="post">
-            <h4 class="post_error"><?php if (isset($error)) {
-                                        echo $error;
-                                    } ?></h4>
-            <p>本当にログアウトしますか？</p>
+            <h4 class="post_error"><?php echo $message; ?></h4>
             <form class="post_form" action="" method="get">
                 <p><input class="btn red_btn" type="submit" name="cfm" value="ログアウトする"></p>
             </form>
