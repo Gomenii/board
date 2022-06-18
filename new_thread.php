@@ -24,58 +24,71 @@ if ($loginJudge == '未ログイン') {
 // タイトル：1～32文字以内（全角）　1～128文字以内（半角）　
 // 内容：1～1000文字以内（全角）1～4000文字以内（半角）
 
-// ログインエラー処理
-if (isset($_GET['title']) || isset($_GET['content'])) {
+// ログインエラー処理・リクエストエラー処理
+if (!empty($_POST)) {
     if ($loginJudge == '未ログイン') {
         $errors[] = 'ログインされていません。';
+    }
+    if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION['csrfToken']) {
+        $_SESSION = array();
+        header('Location: request.error.php');
+        exit();
     }
 }
 
 // タイトルの入力があれば変数に格納
-if (isset($_GET['title'])) {
-    $getTitle = $_GET['title'];
+if (isset($_POST['title']) && !isset($errors)) {
+    $postTitle = $_POST['title'];
     $titleMaximum = 128;
-    $titleLength = strlen($getTitle);
+    $titleLength = strlen($postTitle);
+    $_SESSION['title'] = htmlsc($postTitle);
 }
 
 // 内容の入力があれば変数に格納
-if (isset($_GET['content'])) {
-    $getContent = $_GET['content'];
+if (isset($_POST['content']) && !isset($errors)) {
+    $postContent = $_POST['content'];
     $contentMaximum = 4000;
-    $contentLength = strlen($getContent);
+    $contentLength = strlen($postContent);
+    $_SESSION['content'] = nl2br(htmlsc($postContent));
 }
 
 // タイトルのエラー処理
-if (isset($getTitle)) {
-    if ($getTitle == 0 || $titleLength > $titleMaximum) {
+if (isset($postTitle)) {
+    if ($titleLength == 0 || $titleLength > $titleMaximum) {
         $errors[] = '※タイトルが1～32文字ではありません。';
     }
-    if (empty($getTitle)) {
-        $errors[] = '※タイトルが空白です。';
-    }
 } else {
-    $errors[] = '※タイトルを入力してください（1～32文字以内）';
+    if (isset($_SESSION['title'])) {
+        $errors[] = '※タイトルを再入力してください（1～32文字以内）';
+    } else {
+        $errors[] = '※タイトルを入力してください（1～32文字以内）';
+    }
 }
 
 // 内容のエラー処理
-if (isset($getContent)) {
-    if ($getContent == 0 || $contentLength > $contentMaximum) {
+if (isset($postContent)) {
+    if ($contentLength == 0 || $contentLength > $contentMaximum) {
         $errors[] = '※内容が1～1000文字ではありません。';
     }
-    if (empty($getContent)) {
-        $errors[] = '※内容が空白です。';
-    }
 } else {
-    $errors[] = '※内容を入力してください（1～1000文字以内）';
+    if (isset($_SESSION['content'])) {
+        $errors[] = '※内容を再入力してください（1～1000文字以内）';
+    } else {
+        $errors[] = '※内容を入力してください（1～1000文字以内）';
+    }
 }
 
 // エラーがない場合は確認画面に遷移
 if (!isset($errors)) {
-    $_SESSION['title'] = htmlsc($_GET['title']);
-    $_SESSION['content'] = nl2br(htmlsc($_GET['content']));
+    $_SESSION['title'] = htmlsc($postTitle);
+    $_SESSION['content'] = nl2br(htmlsc($postContent));
     header('location: new_thread_cfm.php');
     exit();
 }
+
+$tokenByte = openssl_random_pseudo_bytes(16);
+$token = bin2hex($tokenByte);
+$_SESSION['csrfToken'] = $token;
 ?>
 
 
@@ -131,14 +144,21 @@ if (!isset($errors)) {
             } ?>
         </div>
 
-        <div class="post">
-            <h4 class="post_error"><?php foreach ($errors as $error) {
-                                        echo $error . '<br>' . '<br>';
-                                    } ?></h4>
-            <form class="post_form" action="" method="get">
-                <p>　タイトル　<textarea name="title" cols="40" rows="2"></textarea></p>
-                <p>　　内容　　<textarea name="content" cols="40" rows="10"></textarea></p>
-                <p><input class="btn" type="submit" name="cfm" value="確認画面にすすむ"></p>
+        <div class="content">
+            <h4><?php foreach ($errors as $error) {
+                    echo $error . '<br>' . '<br>';
+                } ?></h4>
+            <form class="content_center" action="" method="POST">
+                <input type="hidden" name="token" value="<?php echo $_SESSION['csrfToken'] ?>">
+                <p>【タイトル】</p>
+                <p><textarea name="title" cols="40" rows="2"><?php if (isset($_SESSION['title'])) {
+                                                                    echo $_SESSION['title'];
+                                                                } ?></textarea></p>
+                <p><br>【内容】</p>
+                <p><textarea name="content" cols="40" rows="10"><?php if (isset($_SESSION['content'])) {
+                                                                    echo strip_tags($_SESSION['content']);
+                                                                } ?></textarea></p>
+                <p><input class="btn btn_blue" type="submit" name="cfm" value="確認画面にすすむ"></p>
             </form>
         </div>
 
@@ -147,7 +167,7 @@ if (!isset($errors)) {
             <?php $hostName = $_SERVER['HTTP_HOST'];
             if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
                 <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
-                    <button class="btn back_btn" type="button">前の画面に戻る</button>
+                    <button class="btn" type="button">前の画面に戻る</button>
                 </a>
             <?php endif; ?>
         </div>

@@ -20,20 +20,26 @@ if ($loginJudge == '未ログイン') {
     $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
 }
 
-// スレッド作成条件　 
-// ログイン必須　タイトル：1～32文字以内　内容：1～1000文字以内
-
-// ログインエラー処理
-if (isset($_SESSION['title']) || isset($_SESSION['content'])) {
-    if ($loginJudge == 'ログイン中') {
-        $errors[] = '下記の内容でスレッドを作成します。<br>（作成後の変更・削除は原則できません。）';
-    } else {
-        $errors[] = 'ログインされていません。';
+// ログインエラー処理・リクエストエラー処理
+if (!empty($_POST)) {
+    if ($loginJudge == '未ログイン') {
+        $error = 'ログインされていません。';
+    }
+    if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION['csrfToken']) {
+        $_SESSION = array();
+        header('Location: request.error.php');
+        exit();
+    }
+} else {
+    if (!isset($_SESSION["csrfToken"])) {
+        $_SESSION = array();
+        header('Location: request.error.php');
+        exit();
     }
 }
 
 // スレッド作成ボタンが押されたらDBに保存し完了画面に遷移
-if ($loginJudge == 'ログイン中' && isset($_GET['cfm'])) {
+if (!isset($error) && isset($_POST['cfm'])) {
     $name = $_SESSION['loginName'];
     $title = $_SESSION['title'];
     $content = $_SESSION['content'];
@@ -43,8 +49,15 @@ if ($loginJudge == 'ログイン中' && isset($_GET['cfm'])) {
     $stmt->bindValue(':title', $title, PDO::PARAM_STR);
     $stmt->bindValue(':content', $content, PDO::PARAM_STR);
     $stmt->execute();
+
+    unset($_SESSION['title'], $_SESSION['content'], $_SESSION['csrfToken']);
     header('Location: new_thread_cpl.php');
     exit();
+}
+
+// エラーがなければ確認文を表示
+if (!isset($error)) {
+    $error = '下記の内容でスレッドを作成します。<br>（作成後の変更・削除は原則できません。）';
 }
 ?>
 
@@ -100,18 +113,15 @@ if ($loginJudge == 'ログイン中' && isset($_GET['cfm'])) {
             } ?>
         </div>
 
-        <div class="post">
-            <h4><?php foreach ($errors as $error) {
-                    echo $error . '<br>' . '<br>';
-                } ?></h4>
-            <form action="" method="get">
-                <div class="content_threads">
-                    <p>【タイトル】</p>
-                    <p><?php echo $_SESSION['title'] ?></p>
-                    <p><br>【内容】</p>
-                    <p><?php echo $_SESSION['content'] ?></p>
-                </div>
-                <p><input class="btn blue_btn" type="submit" name="cfm" value="スレッドを作成する"></p>
+        <div class="content">
+            <h4><?php echo $error; ?></h4>
+            <form class="content_center" action="" method="post">
+                <input type="hidden" name="token" value="<?php echo $_SESSION['csrfToken'] ?>">
+                <p>【タイトル】</p>
+                <p><?php echo $_SESSION['title'] ?></p>
+                <p><br>【内容】</p>
+                <p><?php echo $_SESSION['content'] ?></p>
+                <p><input class="btn btn_blue" type="submit" name="cfm" value="スレッドを作成"></p>
             </form>
         </div>
 
@@ -120,7 +130,7 @@ if ($loginJudge == 'ログイン中' && isset($_GET['cfm'])) {
             <?php $hostName = $_SERVER['HTTP_HOST'];
             if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
                 <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
-                    <button class="btn back_btn" type="button">前の画面に戻る</button>
+                    <button class="btn" type="button">前の画面に戻る</button>
                 </a>
             <?php endif; ?>
         </div>
