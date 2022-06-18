@@ -124,7 +124,7 @@ if (isset($passMatch)) {
                 <p>ユーザー名　<input type="text" name="name" value="<?php if (isset($_POST['name'])) {
                                                                     htmlsc($_POST['name']);
                                                                 } ?>"></p>
-                <p>パスワード　<input class="" type="text" name="pass" value="<?php if (isset($_POST['pass'])) {
+                <p>パスワード　<input type="text" name="pass" value="<?php if (isset($_POST['pass'])) {
                                                                             htmlsc($_POST['pass']);
                                                                         } ?>"></p>
                 <p><input class="btn" type="submit" name="login" value="ログイン"></p>
