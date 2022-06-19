@@ -20,7 +20,7 @@ if (isset($_SESSION['loginName'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="sample text">
     <link rel="stylesheet" type="text/css" href="board.css">
-    <title>アカウント新規登録確認</title>
+    <title>アカウント新規登録完了</title>
     <script type="text/javascript">
         window.addEventListener('DOMContentLoaded', () => {
             const btn = document.querySelector('.menu_btn');
@@ -60,7 +60,10 @@ if (isset($_SESSION['loginName'])) {
         </div>
 
         <div class="content">
-            <h4>アカウントを登録しました。</h4>
+            <div class="content_center">
+                <h4>アカウントを登録しました。</h4>
+                <p>※ブラウザの戻るボタンなどで、前の画面に戻らないでください。</p>
+            </div>
         </div>
 
         <div class="bottom">
