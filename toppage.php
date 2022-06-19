@@ -2,28 +2,28 @@
 session_start();
 require_once('db_board.php');
 require_once('fanctions.php');
+unset($_SESSION['title'], $_SESSION['content'], $_SESSION['csrfToken']);
+var_dump($_SESSION);
+
+//　セッションタイムアウト判定
+if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
+    $_SESSION = array();
+    $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
+}
 
 // ログイン判定
 if (isset($_SESSION['loginName'])) {
     $loginJudge = 'ログイン中';
+    $_SESSION['start'] = time();
 } else {
     $loginJudge = '未ログイン';
-}
-
-if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
-    unset($_SESSION['loginName'], $_SESSION['loginPass']);
-    $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
-}
-$_SESSION['start'] = time();
-
-if ($loginJudge == '未ログイン') {
     $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
 }
 
+// 最新のスレッド50件のデータをDBから取得
 $stmt = $dbh->prepare('SELECT * FROM threads ORDER BY id DESC LIMIT 50');
 $stmt->execute();
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 
 
@@ -72,8 +72,15 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="main">
 
         <div class="head">
-            <h2>この掲示板はポートフォリオ用となっています</h2>
-            <?php if (isset($display)) {
+            <h2> <?php
+                    if (isset($_SESSION['loginName'])) {
+                        echo 'こんにちは！' . $_SESSION['loginName'] . 'さん！';
+                    } else {
+                        echo 'この掲示板はポートフォリオ用となっています';
+                    }
+                    ?> </h2>
+            <?php
+            if (isset($display)) {
                 echo $display;
             } ?>
             <p><a href="new_thread.php">
@@ -82,14 +89,14 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div class="content">
-                <?php
-                for ($a = 0; $a < $data[0]['id']; $a++) {
-                    if (isset($data[$a])) {
-                        echo 'タイトル：' . '<a href="thread' . $data[$a]['id'] . '.php">' . mb_strimwidth($data[$a]['title'], 0, 64, '...', 'UTF-8')  . '</a>'. '<br>';
-                        echo '作成者：' . $data[$a]['name'] . '　作成日時：' . $data[$a]['created'] . '<br>'. '<br>'. '<br>';
-                    }
+            <?php
+            for ($a = 0; $a < $data[0]['id']; $a++) {
+                if (isset($data[$a])) {
+                    echo 'タイトル：' . '<a href="thread' . $data[$a]['id'] . '.php">' . mb_strimwidth($data[$a]['title'], 0, 64, '...', 'UTF-8')  . '</a>' . '<br>';
+                    echo '作成者：' . $data[$a]['name'] . '　作成日時：' . $data[$a]['created'] . '<br>' . '<br>' . '<br>';
                 }
-                ?>
+            }
+            ?>
         </div>
 
         <div class="bottom">

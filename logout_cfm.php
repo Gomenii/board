@@ -3,25 +3,26 @@ session_start();
 require_once('db_board.php');
 require_once('fanctions.php');
 
+//　セッションタイムアウト判定
+if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
+    $_SESSION = array();
+    $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
+}
+
 // ログイン判定
 if (isset($_SESSION['loginName'])) {
     $loginJudge = 'ログイン中';
+    $_SESSION['start'] = time();
 } else {
     $loginJudge = '未ログイン';
 }
-
-if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
-    unset($_SESSION['loginName'], $_SESSION['loginPass']);
-    $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
-}
-$_SESSION['start'] = time();
 
 // ログインエラー処理・ログアウト処理
 if ($loginJudge == '未ログイン') {
     $message = '※ログインされていません。';
 } else {
     $message = '本当にログアウトしますか？';
-    if (isset($_GET['cfm'])) {
+    if (!empty($_GET)) {
         $_SESSION = array();
         header('location: logout_cpl.php');
         exit();
@@ -84,7 +85,7 @@ if ($loginJudge == '未ログイン') {
         <div class="content">
             <h4><?php echo $message; ?></h4>
             <form class="content_center" action="" method="get">
-                <p><input class="btn btn_red" type="submit" name="cfm" value="ログアウトする"></p>
+                <p><input class="btn btn_red" type="submit" name="logout" value="ログアウトする"></p>
             </form>
         </div>
 

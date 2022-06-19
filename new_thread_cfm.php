@@ -3,20 +3,18 @@ session_start();
 require_once('db_board.php');
 require_once('fanctions.php');
 
+//　セッションタイムアウト判定
+if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
+    $_SESSION = array();
+    $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
+}
+
 // ログイン判定
 if (isset($_SESSION['loginName'])) {
     $loginJudge = 'ログイン中';
+    $_SESSION['start'] = time();
 } else {
     $loginJudge = '未ログイン';
-}
-
-if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
-    unset($_SESSION['loginName'], $_SESSION['loginPass']);
-    $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
-}
-$_SESSION['start'] = time();
-
-if ($loginJudge == '未ログイン') {
     $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
 }
 
@@ -30,12 +28,11 @@ if (!empty($_POST)) {
         header('Location: request.error.php');
         exit();
     }
-} else {
-    if (!isset($_SESSION["csrfToken"])) {
-        $_SESSION = array();
-        header('Location: request.error.php');
-        exit();
-    }
+}
+if (!isset($_SESSION["csrfToken"])) {
+    $_SESSION = array();
+    header('Location: request.error.php');
+    exit();
 }
 
 // スレッド作成ボタンが押されたらDBに保存し完了画面に遷移
