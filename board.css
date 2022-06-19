@@ -37,6 +37,10 @@ body {
     text-align: center;
 }
 
+.head {
+    margin-bottom: 20px;
+}
+
 .content {
     display: inline-block;    
     text-align: left;
