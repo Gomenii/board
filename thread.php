@@ -82,13 +82,11 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
         </div>
 
         <div class="content">
-            <div class="content_threads">
-                <?php
-                echo 'スレッドNo.' . $data['id'] . '　作成者：' . $data['name'] . '　作成日時：' . $data['created'] . '<br>' . '<br>';
-                echo '【内容】' . '<br>';
-                echo $data['content'] ;
-                ?>
-            </div>
+            <?php
+            echo 'スレッドNo.' . $data['id'] . '　作成者：' . $data['name'] . '　作成日時：' . $data['created'] . '<br>' . '<br>';
+            echo '【内容】' . '<br>';
+            echo $data['content'];
+            ?>
         </div>
 
         <div class="bottom">
