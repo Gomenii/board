@@ -10,6 +10,21 @@ if (isset($_SESSION['loginName'])) {
     $loginJudge = '未ログイン';
 }
 
+// リクエストエラー処理
+if (!empty($_POST)) {
+    if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION['csrfToken']) {
+        $_SESSION = array();
+        header('Location: request.error.php');
+        exit();
+    }
+}
+
+// トークン作成
+$tokenByte = openssl_random_pseudo_bytes(16);
+$token = bin2hex($tokenByte);
+$_SESSION['csrfToken'] = $token;
+
+
 // 新規アカウント条件　 
 // ユーザー名：4～16文字以内。半角 英大文字・英小文字・数字・アンダーバー。　空文字,false,NULL以外。重複していない。
 // パスワード：6～16文字以内。半角 英大文字・英小文字・数字・下記記号。　　　空文字以外。
@@ -51,14 +66,9 @@ if (isset($postName)) {
 if (isset($postName) && !isset($errors)) {
     $stmt = $dbh->prepare('SELECT * FROM users WHERE name = :name');
     $stmt->bindValue(':name', $postName, PDO::PARAM_STR);
-    $res = $stmt->execute();
-    if ($res) {
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
-    } else {
-        $errors[] = '※サーバーエラーのためしばらくお待ちいただいてから、再度ログインしてください。';
-    }
-}
-if (isset($data)) {
+    $stmt->execute();
+    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
     if ($data !== false) {
         $errors[] = '※このユーザー名は、すでに他のユーザーに使用されています。<br>
                     他のユーザー名をご登録ください。';
@@ -144,8 +154,13 @@ if (!isset($errors)) {
                 <h4><?php foreach ($errors as $error) {
                         echo $error . '<br>' . '<br>';
                     } ?></h4>
-                <p>ユーザー名　<input type="text" name="name" value=""></p>
-                <p>パスワード　<input type="text" name="pass" value=""></p>
+                <input type="hidden" name="token" value="<?php echo $_SESSION['csrfToken'] ?>">
+                <p>ユーザー名　<input type="text" name="name" value="<?php if (isset($_POST['name'])) {
+                                                                    echo htmlsc($_POST['name']);
+                                                                } ?>"></p>
+                <p>パスワード　<input type="text" name="pass" value="<?php if (isset($_POST['pass'])) {
+                                                                    echo htmlsc($_POST['pass']);
+                                                                } ?>"></p>
                 <p><input class="btn btn_blue" type="submit" name="account_reg_btn" value="確認画面にすすむ"></p>
             </form>
             <h4>【注意事項】</h4>

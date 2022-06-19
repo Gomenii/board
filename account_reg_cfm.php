@@ -10,15 +10,22 @@ if (isset($_SESSION['loginName'])) {
     $loginJudge = '未ログイン';
 }
 
-// $_POSTが空（NULL）&& 前のページのアドレスが新規登録画面ではない場合、エラー画面に遷移 
-$a = 'http://localhost/board/account_reg.php';
-if (!isset($_POST['account_reg_btn']) && $_SERVER['HTTP_REFERER'] != $a) {
-    header('Location: error.php');
+// リクエストエラー処理
+if (!empty($_POST)) {
+    if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION['csrfToken']) {
+        $_SESSION = array();
+        header('Location: request.error.php');
+        exit();
+    }
+}
+if (!isset($_SESSION["csrfToken"])) {
+    $_SESSION = array();
+    header('Location: request.error.php');
     exit();
 }
 
-// $_POSTが空（NULL）ではなければ、DB登録処理を実行し、完了画面に遷移
-if (isset($_POST['account_reg_btn'])) {
+// DB登録処理を実行し、完了画面に遷移
+if (!empty($_POST)) {
     $name = $_SESSION['newName'];
     $pass = password_hash($_SESSION['newPass'], PASSWORD_BCRYPT);
 
@@ -26,6 +33,8 @@ if (isset($_POST['account_reg_btn'])) {
     $stmt->bindValue(':name', $name, PDO::PARAM_STR);
     $stmt->bindValue(':password', $pass, PDO::PARAM_STR);
     $stmt->execute();
+
+    $_SESSION = array();
     header('Location: account_reg_cpl.php');
     exit();
 }
@@ -82,6 +91,7 @@ if (isset($_POST['account_reg_btn'])) {
         <div class="content">
             <form class="content_center" action="" method="POST">
                 <h4>下記の内容でアカウントを登録します。</h4>
+                <input type="hidden" name="token" value="<?php echo $_SESSION['csrfToken'] ?>">
                 <p>ユーザー名 : <?php echo $_SESSION['newName']; ?></p>
                 <p>パスワード : <?php echo $_SESSION['newPass']; ?></p>
                 <p><input class="btn btn_blue" type="submit" name="account_reg_btn" value="新規登録する"></p>
