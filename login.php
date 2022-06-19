@@ -10,36 +10,77 @@ if (isset($_SESSION['loginName'])) {
     $loginJudge = '未ログイン';
 }
 
-if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
-    unset($_SESSION['loginName'], $_SESSION['loginPass']);
-    $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
-}
-$_SESSION['start'] = time();
-
-// 入力判定
-if (empty($_POST['name'])) {
-    $errors[] = '※ユーザー名を入力してください';
+// リクエストエラー処理
+if (!empty($_POST)) {
+    if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION['csrfToken']) {
+        $_SESSION = array();
+        header('Location: request.error.php');
+        exit();
+    }
 }
 
-if (empty($_POST['pass'])) {
-    $errors[] = '※パスワードを入力してください';
+// トークン作成
+$tokenByte = openssl_random_pseudo_bytes(16);
+$token = bin2hex($tokenByte);
+$_SESSION['csrfToken'] = $token;
+
+
+// 以下、入力判定
+
+$postMaximum = 16;
+
+// ユーザー名の入力があれば変数に格納（未入力での送信はfalseとしたい為、!empty使用）
+if (!empty($_POST['name'])) {
+    $postName = $_POST['name'];
+    $nameMinimum = 4;
+    $nameLength = strlen($postName);
 }
 
-// 入力されたユーザー名でDBの検索を実行。データ（id, name, password, created, modified）を取得
-if (!empty($_POST['name']) && !empty($_POST['pass'])) {
+// パスワードの入力があれば変数に格納（未入力での送信はfalseとしたい為、!empty使用）
+if (!empty($_POST['pass'])) {
+    $postPass = $_POST['pass'];
+    $passMinimum = 6;
+    $passLength = strlen($postPass);
+}
+
+// ユーザー名のエラー処理
+if (isset($postName)) {
+    if ($nameLength < $nameMinimum || $nameLength > $postMaximum) {
+        $errors[] = '※ユーザー名が4～16文字ではありません。';
+    }
+    if (preg_match('/[^a-zA-Z0-9_]/', $postName)) {
+        $errors[] = '※ユーザー名に使用不可能な文字が含まれています。';
+    }
+    if (preg_match('/^[_]/', $postName)) {
+        $errors[] = '※ユーザー名の先頭に _（アンダーバー）は使用できません。';
+    }
+} else {
+    $errors[] = '※ユーザー名を入力してください。';
+}
+
+// パスワードのエラー処理
+if (isset($postPass)) {
+    if ($passLength < $passMinimum || $passLength > $postMaximum) {
+        $errors[] = '※パスワードが6～16文字ではありません。';
+    }
+    if (preg_match('/[^!-~]/', $postPass)) {
+        $errors[] = '※パスワードに使用不可能な文字が含まれています。';
+    }
+    if (preg_match('/^[!-\/:-@[-`{-~]/', $postPass)) {
+        $errors[] = '※パスワードの先頭に記号は使用できません。';
+    }
+} else {
+    $errors[] = '※パスワードを入力してください。';
+}
+
+// 入力されたユーザー名でDBの検索を実行。
+// データ（id, name, password, created, modified）を取得し、変数に格納（key:カラム名　value:データ）
+if (!isset($errors)) {
     $name = $_POST['name'];
     $stmt = $dbh->prepare('SELECT * FROM users WHERE name = :name');
     $stmt->bindValue(':name', $name, PDO::PARAM_STR);
-    $res = $stmt->execute();
-}
-
-// DBの検索に成功した場合、データを変数に格納。（key:カラム名　value:データ）　失敗した場合、案内を表示
-if (isset($res)) {
-    if ($res) {
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
-    } else {
-        $errors[] = '※サーバーエラーのためしばらくお待ちいただいてから、再度ログインしてください。';
-    }
+    $stmt->execute();
+    $data = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 // DBの検索結果があった場合は、入力されたパスワードがDBのハッシュ化されたパスワードと一致するか確認
@@ -47,22 +88,24 @@ if (isset($data)) {
     if ($data !== false) {
         $passMatch = password_verify($_POST['pass'], $data['password']);
     } else {
-        $errors[] = '※ユーザー名が違うか、登録されていません。';
+        $errors[] = '※ユーザー名またはパスワードが違います。';
     }
 }
 
-// パスワードが一致していればトップページに遷移
+// パスワードが一致していれば、ログイン名をセッションに保存しトップページに遷移
 if (isset($passMatch)) {
     if ($passMatch) {
+        $_SESSION['start'] = time();
         $_SESSION['loginName'] = $_POST['name'];
-        $_SESSION['loginPass'] = $_POST['pass'];
+        unset($_SESSION['csrfToken']);
         header('Location: toppage.php');
         exit();
     } else {
-        $errors[] = '※パスワードが違います。';
+        $errors[] = '※ユーザー名またはパスワードが違います。';
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -121,11 +164,12 @@ if (isset($passMatch)) {
                     echo $error . '<br>' . '<br>';
                 } ?></h4>
             <form class="content_center" action="" method="POST">
+                <input type="hidden" name="token" value="<?php echo $_SESSION['csrfToken'] ?>">
                 <p>ユーザー名　<input type="text" name="name" value="<?php if (isset($_POST['name'])) {
-                                                                    htmlsc($_POST['name']);
+                                                                    echo htmlsc($_POST['name']);
                                                                 } ?>"></p>
                 <p>パスワード　<input type="text" name="pass" value="<?php if (isset($_POST['pass'])) {
-                                                                    htmlsc($_POST['pass']);
+                                                                    echo htmlsc($_POST['pass']);
                                                                 } ?>"></p>
                 <p><input class="btn btn_small btn_blue" type="submit" name="login" value="ログイン"></p>
             </form>
