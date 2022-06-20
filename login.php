@@ -92,11 +92,13 @@ if (isset($data)) {
     }
 }
 
-// パスワードが一致していれば、ログイン名をセッションに保存しトップページに遷移
+// パスワードが一致していれば、ログイン情報をセッション・Cookieに保存しトップページに遷移
 if (isset($passMatch)) {
     if ($passMatch) {
         $_SESSION['start'] = time();
         $_SESSION['loginName'] = $_POST['name'];
+        setcookie('loginName', $_POST['name'], time() + 60 * 60 * 24);
+        setcookie('loginPass', $_POST['pass'], time() + 60 * 60 * 24);
         unset($_SESSION['csrfToken']);
         header('Location: toppage.php');
         exit();
@@ -167,9 +169,13 @@ if (isset($passMatch)) {
                 <input type="hidden" name="token" value="<?php echo $_SESSION['csrfToken'] ?>">
                 <p>ユーザー名　<input type="text" name="name" value="<?php if (isset($_POST['name'])) {
                                                                     echo htmlsc($_POST['name']);
+                                                                } elseif (isset($_COOKIE['loginName'])) {
+                                                                    echo $_COOKIE['loginName'];
                                                                 } ?>"></p>
-                <p>パスワード　<input type="text" name="pass" value="<?php if (isset($_POST['pass'])) {
+                <p>パスワード　<input type="password" name="pass" value="<?php if (isset($_POST['pass'])) {
                                                                     echo htmlsc($_POST['pass']);
+                                                                } elseif (isset($_COOKIE['loginPass'])) {
+                                                                    echo $_COOKIE['loginPass'];
                                                                 } ?>"></p>
                 <p><input class="btn btn_small btn_blue" type="submit" name="login" value="ログイン"></p>
             </form>
