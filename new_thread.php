@@ -6,6 +6,7 @@ require_once('fanctions.php');
 //　セッションタイムアウト判定
 if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
     $_SESSION = array();
+    session_destroy();
     $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
 }
 
@@ -18,17 +19,14 @@ if (isset($_SESSION['loginName'])) {
     $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
 }
 
-// スレッド作成条件　 ※ログイン必須
-// タイトル：1～32文字以内（全角）　1～128文字以内（半角）　
-// 内容：1～1000文字以内（全角）1～4000文字以内（半角）
-
 // ログインエラー処理・リクエストエラー処理
 if (!empty($_POST)) {
     if ($loginJudge == '未ログイン') {
-        $errors[] = 'ログインされていません。';
+        $errors['notLogin'] = 'ログインされていません。';
     }
-    if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION['csrfToken']) {
+    if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION['thread']['csrfToken']) {
         $_SESSION = array();
+        session_destroy();
         header('Location: request.error.php');
         exit();
     }
@@ -37,44 +35,44 @@ if (!empty($_POST)) {
 // トークン作成
 $tokenByte = openssl_random_pseudo_bytes(16);
 $token = bin2hex($tokenByte);
-$_SESSION['csrfToken'] = $token;
+$_SESSION['thread'] = ['csrfToken'  => $token];
 
-// タイトルの入力があれば変数に格納
-if (isset($_POST['title']) && !isset($errors)) {
-    $postTitle = $_POST['title'];
-    $titleMaximum = 128;
-    $titleLength = strlen($postTitle);
-    $_SESSION['title'] = htmlsc($postTitle);
-}
 
-// 内容の入力があれば変数に格納
-if (isset($_POST['content']) && !isset($errors)) {
-    $postContent = $_POST['content'];
-    $contentMaximum = 4000;
-    $contentLength = strlen($postContent);
-    $_SESSION['content'] = nl2br(htmlsc($postContent));
-}
+// スレッド作成条件　 ※ログイン必須
+// タイトル：1～32文字以内（全角）　1～128文字以内（半角）　
+// 内容：1～1000文字以内（全角）1～4000文字以内（半角）
 
-// タイトルのエラー処理
-if (isset($postTitle)) {
-    if ($titleLength == 0 || $titleLength > $titleMaximum) {
-        $errors[] = '※タイトルが1～32文字ではありません。';
+// タイトル・内容の入力があれば、それぞれ変数に格納
+if (!isset($errors['notLogin'])) {
+    if (!empty($_POST['title'])) {
+        $postTitle = $_POST['title'];
+        $titleMaximum = 128;
+        $titleLength = strlen($postTitle);
     }
-} else {
-    if (isset($_SESSION['title'])) {
+    if (!empty($_POST['content'])) {
+        $postContent = $_POST['content'];
+        $contentMaximum = 4000;
+        $contentLength = strlen($postContent);
+    }
+}
+
+// タイトル・内容のエラー処理
+if (!isset($errors['notLogin'])) {
+    if (isset($postTitle)) {
+        if ($titleLength > $titleMaximum) {
+            $errors[] = '※タイトルが1～32文字ではありません。';
+        }
+    } elseif (isset($_SESSION['thread']['title'])) {
         $errors[] = '※タイトルを再入力してください（1～32文字以内）';
     } else {
         $errors[] = '※タイトルを入力してください（1～32文字以内）';
     }
-}
 
-// 内容のエラー処理
-if (isset($postContent)) {
-    if ($contentLength == 0 || $contentLength > $contentMaximum) {
-        $errors[] = '※内容が1～1000文字ではありません。';
-    }
-} else {
-    if (isset($_SESSION['content'])) {
+    if (isset($postContent)) {
+        if ($contentLength > $contentMaximum) {
+            $errors[] = '※内容が1～1000文字ではありません。';
+        }
+    } elseif (isset($_SESSION['thread']['content'])) {
         $errors[] = '※内容を再入力してください（1～1000文字以内）';
     } else {
         $errors[] = '※内容を入力してください（1～1000文字以内）';
@@ -83,8 +81,8 @@ if (isset($postContent)) {
 
 // エラーがない場合は確認画面に遷移
 if (!isset($errors)) {
-    $_SESSION['title'] = htmlsc($postTitle);
-    $_SESSION['content'] = nl2br(htmlsc($postContent));
+    $_SESSION['thread'] = ['title' => htmlsc($postTitle)];
+    $_SESSION['thread'] = ['content' => nl2br(htmlsc($postContent))];
     header('location: new_thread_cfm.php');
     exit();
 }
@@ -120,7 +118,7 @@ if (!isset($errors)) {
 <body>
     <div class="header">
         <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
-        <p><?php echo $loginJudge; ?></p>
+        <p><?= $loginJudge; ?></p>
         <button class="menu_btn">Menu</button>
         <nav class="menu_list">
             <ul>
@@ -145,17 +143,17 @@ if (!isset($errors)) {
 
         <div class="content">
             <h4><?php foreach ($errors as $error) {
-                    echo $error . '<br>' . '<br>';
+                    echo '<p>' . $error . '</p>';
                 } ?></h4>
-            <form class="content_center" action="" method="POST">
-                <input type="hidden" name="token" value="<?php echo $_SESSION['csrfToken'] ?>">
+            <form action="" method="POST">
+                <input type="hidden" name="token" value="<?= $_SESSION['thread']['csrfToken']; ?>">
                 <p>【タイトル】</p>
-                <p><textarea name="title" cols="40" rows="2"><?php if (isset($_SESSION['title'])) {
-                                                                    echo $_SESSION['title'];
+                <p><textarea name="title" cols="40" rows="2"><?php if (isset($_SESSION['thread']['title'])) {
+                                                                    echo $_SESSION['thread']['title'];
                                                                 } ?></textarea></p>
                 <p><br>【内容】</p>
-                <p><textarea name="content" cols="40" rows="10"><?php if (isset($_SESSION['content'])) {
-                                                                    echo strip_tags($_SESSION['content']);
+                <p><textarea name="content" cols="40" rows="10"><?php if (isset($_SESSION['thread']['content'])) {
+                                                                    echo strip_tags($_SESSION['thread']['content']);
                                                                 } ?></textarea></p>
                 <p><input class="btn btn_blue" type="submit" name="cfm" value="確認画面にすすむ"></p>
             </form>
@@ -165,7 +163,7 @@ if (!isset($errors)) {
             <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
             <?php $hostName = $_SERVER['HTTP_HOST'];
             if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
-                <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
+                <a href="<?= $_SERVER['HTTP_REFERER']; ?>">
                     <button class="btn" type="button">前の画面に戻る</button>
                 </a>
             <?php endif; ?>
