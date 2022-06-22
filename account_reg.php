@@ -150,10 +150,11 @@ if (!isset($errors)) {
         </div>
 
         <div class="content">
-            <form class="content_center" action="" method="POST">
-                <h4><?php foreach ($errors as $error) {
-                        echo $error . '<br>' . '<br>';
-                    } ?></h4>
+            <h4><?php foreach ($errors as $error) {
+                    echo '<p>' . $error . '</p>';
+                } ?></h4>
+
+            <form action="" method="POST">
                 <input type="hidden" name="token" value="<?php echo $_SESSION['csrfToken'] ?>">
                 <p>ユーザー名　<input type="text" name="name" value="<?php if (isset($_POST['name'])) {
                                                                     echo htmlsc($_POST['name']);
@@ -163,6 +164,9 @@ if (!isset($errors)) {
                                                                 } ?>"></p>
                 <p><input class="btn btn_blue" type="submit" name="account_reg_btn" value="確認画面にすすむ"></p>
             </form>
+        </div>
+
+        <div class="content_left">
             <h4>【注意事項】</h4>
             <p>※登録に使用できる文字は<a href="account_reg_str.php" target="_blank" rel="noopener noreferrer">こちら</a>を参考にしてください。</p>
             <p>※ユーザー名とパスワードは、同じものを使用しないでください。</p>

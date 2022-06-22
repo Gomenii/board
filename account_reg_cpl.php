@@ -60,10 +60,8 @@ if (isset($_SESSION['loginName'])) {
         </div>
 
         <div class="content">
-            <div class="content_center">
                 <h4>アカウントを登録しました。</h4>
                 <p>※ブラウザの戻るボタンなどで、前の画面に戻らないでください。</p>
-            </div>
         </div>
 
         <div class="bottom">

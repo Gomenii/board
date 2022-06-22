@@ -89,7 +89,7 @@ if (!empty($_POST)) {
         </div>
 
         <div class="content">
-            <form class="content_center" action="" method="POST">
+            <form action="" method="POST">
                 <h4>下記の内容でアカウントを登録します。</h4>
                 <input type="hidden" name="token" value="<?php echo $_SESSION['csrfToken'] ?>">
                 <p>ユーザー名 : <?php echo $_SESSION['newName']; ?></p>
