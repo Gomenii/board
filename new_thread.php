@@ -22,7 +22,7 @@ if (isset($_SESSION['loginName'])) {
 // ログインエラー処理・リクエストエラー処理
 if (!empty($_POST)) {
     if ($loginJudge == '未ログイン') {
-        $errors['notLogin'] = 'ログインされていません。';
+        $errors['notLogin'] = '※ログインされていないため、投稿できません。';
     }
     if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['threadCsrfToken']) {
         $_SESSION = array();
