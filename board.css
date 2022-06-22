@@ -1,5 +1,6 @@
 @charset "UTF-8";
 
+/* 全体 */
 body {
     width: 100%;
     margin: 0;
@@ -8,6 +9,17 @@ body {
 p {
     margin-bottom: 30px;
 }
+
+
+/* 汎用 */
+.margin_top_0 {
+    margin-top: 0;
+}
+
+.margin_bottom_0 {
+    margin-bottom: 0;
+}
+
 
 /* ヘッダー */
 .header {
@@ -41,7 +53,6 @@ p {
     text-align: center;
 }
 
-
 .content {
     text-align: center;
 }
@@ -65,16 +76,12 @@ p {
 }
 
 .content_account_reg_str h3 {
-    margin: 50px 0 0 0;
+    margin-top: 50px;
 }
 
 .bottom {
     text-align: center;
     margin: 30px;
-}
-
-#hazimete {
-    margin: 30px 0 0 0;
 }
 
 
