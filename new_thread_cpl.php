@@ -6,6 +6,7 @@ require_once('fanctions.php');
 //　セッションタイムアウト判定
 if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
     $_SESSION = array();
+    session_destroy();
     $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
 }
 
@@ -73,7 +74,7 @@ fclose($handle);
 <body>
     <div class="header">
         <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
-        <p><?php echo $loginJudge; ?></p>
+        <p><?= $loginJudge; ?></p>
         <button class="menu_btn">Menu</button>
         <nav class="menu_list">
             <ul>
@@ -96,13 +97,11 @@ fclose($handle);
         </div>
 
         <div class="content">
-            <div class="content_center">
                 <h4>スレッドを作成しました。</h4>
                 <p>※ブラウザの戻るボタンなどで、前の画面に戻らないでください。</p>
-                <p><a href="<?php echo $fileName ?>">
+                <p><a href="<?= $fileName ?>">
                         <button class="btn btn_big btn_blue" type="button">作成したスレッドへ</button>
                     </a></p>
-            </div>
         </div>
 
         <div class="bottom">

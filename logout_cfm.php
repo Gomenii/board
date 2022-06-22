@@ -6,6 +6,7 @@ require_once('fanctions.php');
 //　セッションタイムアウト判定
 if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
     $_SESSION = array();
+    session_destroy();
     $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
 }
 
@@ -62,7 +63,7 @@ if ($loginJudge == '未ログイン') {
     <div class="header">
         <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
-        <p><?php echo $loginJudge; ?></p>
+        <p><?= $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
                 <li><a href="toppage.php">トップページ</a></li>
@@ -84,7 +85,7 @@ if ($loginJudge == '未ログイン') {
         </div>
 
         <div class="content">
-            <h4><?php echo $message; ?></h4>
+            <h4><?= $message; ?></h4>
             <form class="content_center" action="" method="get">
                 <p><input class="btn btn_red" type="submit" name="logout" value="ログアウトする"></p>
             </form>
@@ -94,7 +95,7 @@ if ($loginJudge == '未ログイン') {
             <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
             <?php $hostName = $_SERVER['HTTP_HOST'];
             if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
-                <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
+                <a href="<?= $_SERVER['HTTP_REFERER']; ?>">
                     <button class="btn" type="button">前の画面に戻る</button>
                 </a>
             <?php endif; ?>
