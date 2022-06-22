@@ -6,6 +6,7 @@ require_once('fanctions.php');
 //　セッションタイムアウト判定
 if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
     $_SESSION = array();
+    session_destroy();
     $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
 }
 
@@ -18,13 +19,66 @@ if (isset($_SESSION['loginName'])) {
     $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
 }
 
-// ファイル生成時に割り振られたスレッドidを元に、スレッド情報を取得
-$threadid = 'okikae';
+// ログインエラー処理・リクエストエラー処理
+if (!empty($_POST)) {
+    if ($loginJudge == '未ログイン') {
+        $errors[] = '※ログインされていないため、投稿できません。';
+    }
+    if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION['resCsrfToken']) {
+        $_SESSION = array();
+        session_destroy();
+        header('Location: request.error.php');
+        exit();
+    }
+}
 
+// トークン作成
+$tokenByte = openssl_random_pseudo_bytes(16);
+$token = bin2hex($tokenByte);
+$_SESSION['resCsrfToken'] = $token;
+
+// ファイル生成時に割り振られたスレッドidを元に、スレッド情報を取得（okikaeは置き換えられる）
+$threadid = 'okikae';
 $stmt = $dbh->prepare('SELECT * FROM threads WHERE id = :id');
 $stmt->bindValue(':id', $threadid, PDO::PARAM_STR);
 $stmt->execute();
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// レス情報取得
+$resStmt = $dbh->prepare('SELECT * FROM posts WHERE thread_id = :thread_id ORDER BY id DESC');
+$resStmt->bindValue(':thread_id', $threadid, PDO::PARAM_STR);
+$resStmt->execute();
+$resData = $resStmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+// レス投稿条件　 ※ログイン必須　内容：1～1000文字以内（全角）1～4000文字以内（半角）
+// レスのエラー処理
+
+if (!isset($errors)) {
+    if (isset($_POST['content'])) {
+        $contentMaximum = 4000;
+        $contentLength = strlen($_POST['content']);
+        if ($contentLength == 0 || $contentLength > $contentMaximum) {
+            $errors[] = '※レス内容が1～1000文字ではありません。';
+        }
+    }
+}
+
+// エラーがない場合はレスを投稿し、リダイレクト
+if (!isset($errors) && !empty($_POST)) {
+    $name = $_SESSION['loginName'];
+    $content = htmlsc($_POST['content']);
+
+    $stmt = $dbh->prepare('INSERT INTO posts (thread_id, name, content) VALUES (:thread_id, :name, :content)');
+    $stmt->bindValue(':thread_id', $threadid, PDO::PARAM_STR);
+    $stmt->bindValue(':name', $name, PDO::PARAM_STR);
+    $stmt->bindValue(':content', $content, PDO::PARAM_STR);
+    $stmt->execute();
+
+    header('location:' . $_SERVER['PHP_SELF']);
+    exit();
+}
 ?>
 
 
@@ -37,7 +91,7 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="sample text">
     <link rel="stylesheet" type="text/css" href="board.css">
-    <title><?php echo $data['title'] ?></title>
+    <title><?= $data['title'] ?></title>
     <script type="text/javascript">
         window.addEventListener('DOMContentLoaded', () => {
             const btn = document.querySelector('.menu_btn');
@@ -58,7 +112,7 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
     <div class="header">
         <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
-        <p><?php echo $loginJudge; ?></p>
+        <p><?= $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
                 <li><a href="toppage.php">トップページ</a></li>
@@ -73,31 +127,58 @@ $data = $stmt->fetch(PDO::FETCH_ASSOC);
     <div class="main">
 
         <div class="head">
-            <h2><?php echo $data['title'] ?></h2>
             <?php if (isset($display)) {
                 echo $display;
             } ?>
         </div>
 
         <div class="content">
-            <?php
-            echo 'スレッドNo.' . $data['id'] . '　作成者：' . $data['name'] . '　作成日時：' . $data['created'] . '<br>' . '<br>';
-            echo '【内容】' . '<br>';
-            echo $data['content'];
-            ?>
+
+            <div class="content_left">
+                <h2><?= $data['title'] ?></h2>
+                <?php
+                echo '<p>' . 'No.' . $data['id'] . '　作成者：' . $data['name'] . '　作成日時：' . $data['created'] . '</p>';
+                echo '<p>' . '<h4>スレッド内容</h4>'  . $data['content'] . '</p>';
+                ?>
+            </div>
+
+            <h5><?php if (isset($errors)) {
+                    foreach ($errors as $error) {
+                        echo  '<p>' . $error . '</p>';
+                    }
+                } ?></h5>
+
+            <div class="content_left content_res">
+                <?php
+                if (!empty($resData)) {
+                    $count = count($resData);
+                    echo '<h4>---レス投稿（' . $count . '件）---</h4>';
+                    foreach ($resData as $rd) {
+                        echo '[' . $count . '] 投稿者:<b>' . $rd['name'] . '</b>　投稿日時:' . $rd['created'] . '<br>'
+                            . '<p>' . $rd['content'] . '</p>' . '<p>' . '</p>';
+                        $count--;
+                    }
+                } else {
+                    echo '<h4>---レス投稿は、まだありません。---</h4>';
+                }
+                ?>
+            </div>
+
+            <div class="content_form">
+                <form action="" method="POST">
+                    <input type="hidden" name="token" value="<?= $_SESSION['resCsrfToken']; ?>">
+                    <p>レス投稿は1～1000文字以内です。</p>
+                    <p><textarea name="content" cols="40" rows="6"></textarea></p>
+                    <p><input class="btn btn_small btn_blue" type="submit" name="res" value="レス投稿"></p>
+                </form>
+            </div>
+
         </div>
 
         <div class="bottom">
             <p><a href="toppage.php">
                     <button class="btn" type="button">トップページへ</button></p>
             </a>
-            <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
-            <?php $hostName = $_SERVER['HTTP_HOST'];
-            if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
-                <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
-                    <button class="btn" type="button">前の画面に戻る</button>
-                </a>
-            <?php endif; ?>
         </div>
 
     </div>
