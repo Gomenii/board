@@ -162,7 +162,7 @@ if (isset($passMatch)) {
         </div>
 
         <div class="content">
-        <h4><?php foreach ($errors as $error) {
+            <h4><?php foreach ($errors as $error) {
                     echo '<p>' . $error . '</p>';
                 } ?></h4>
             <form action="" method="POST">
@@ -179,13 +179,11 @@ if (isset($passMatch)) {
                                                                     } ?>"></p>
                 <p><input class="btn btn_small btn_blue" type="submit" name="login" value="ログイン"></p>
             </form>
-            <p id="hazimete">はじめての方はこちら</p>
+            <p class="margin_bottom_0">はじめての方はこちら</p>
             <a href="account_reg.php">
                 <button class="btn btn_small btn_blue" type="button">新規登録</button>
-            </a>
+            </a></p>
         </div>
-
-
 
         <div class="bottom">
             <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
