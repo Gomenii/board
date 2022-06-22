@@ -162,10 +162,10 @@ if (isset($passMatch)) {
         </div>
 
         <div class="content">
-            <h4><?php foreach ($errors as $error) {
-                    echo $error . '<br>' . '<br>';
+        <h4><?php foreach ($errors as $error) {
+                    echo '<p>' . $error . '</p>';
                 } ?></h4>
-            <form class="content_center" action="" method="POST">
+            <form action="" method="POST">
                 <input type="hidden" name="token" value="<?php echo $_SESSION['csrfToken'] ?>">
                 <p>ユーザー名　<input type="text" name="name" value="<?php if (isset($_POST['name'])) {
                                                                     echo htmlsc($_POST['name']);
@@ -173,18 +173,19 @@ if (isset($passMatch)) {
                                                                     echo $_COOKIE['loginName'];
                                                                 } ?>"></p>
                 <p>パスワード　<input type="password" name="pass" value="<?php if (isset($_POST['pass'])) {
-                                                                    echo htmlsc($_POST['pass']);
-                                                                } elseif (isset($_COOKIE['loginPass'])) {
-                                                                    echo $_COOKIE['loginPass'];
-                                                                } ?>"></p>
+                                                                        echo htmlsc($_POST['pass']);
+                                                                    } elseif (isset($_COOKIE['loginPass'])) {
+                                                                        echo $_COOKIE['loginPass'];
+                                                                    } ?>"></p>
                 <p><input class="btn btn_small btn_blue" type="submit" name="login" value="ログイン"></p>
             </form>
+            <p id="hazimete">はじめての方はこちら</p>
+            <a href="account_reg.php">
+                <button class="btn btn_small btn_blue" type="button">新規登録</button>
+            </a>
         </div>
 
-        <p id="hazimete">はじめての方はこちら</p>
-        <a href="account_reg.php">
-            <button class="btn btn_small btn_blue" type="button">新規登録</button>
-        </a>
+
 
         <div class="bottom">
             <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
