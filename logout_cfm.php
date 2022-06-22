@@ -24,6 +24,7 @@ if ($loginJudge == '未ログイン') {
     $message = '本当にログアウトしますか？';
     if (!empty($_GET)) {
         $_SESSION = array();
+        session_destroy();
         header('location: logout_cpl.php');
         exit();
     }
