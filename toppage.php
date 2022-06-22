@@ -2,12 +2,11 @@
 session_start();
 require_once('db_board.php');
 require_once('fanctions.php');
-unset($_SESSION['title'], $_SESSION['content'], $_SESSION['csrfToken']);
-var_dump($_SESSION);
 
 //　セッションタイムアウト判定
 if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
     $_SESSION = array();
+    session_destroy();
     $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
 }
 
@@ -24,6 +23,26 @@ if (isset($_SESSION['loginName'])) {
 $stmt = $dbh->prepare('SELECT * FROM threads ORDER BY id DESC LIMIT 50');
 $stmt->execute();
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// 不要なセッション情報の削除
+$backPage = $_SERVER['HTTP_REFERER'];
+if (strpos($backPage, 'new_thread') !== false) {
+    unset($_SESSION['title'], $_SESSION['content'], $_SESSION['threadCsrfToken']);
+}
+
+if (strpos($backPage, 'thread') !== false) {
+    unset($_SESSION['resCsrfToken']);
+}
+
+if (strpos($backPage, 'account_reg') !== false) {
+    unset($_SESSION['newName'], $_SESSION['newPass'], $_SESSION['accountRegCsrfToken']);
+}
+
+if (strpos($backPage, 'login') !== false) {
+    unset($_SESSION['loginCsrfToken']);
+}
+
+var_dump($_SESSION);
 ?>
 
 
@@ -57,7 +76,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="header">
         <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
-        <p><?php echo $loginJudge; ?></p>
+        <p><?= $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
                 <li><a href="toppage.php">トップページ</a></li>
@@ -103,7 +122,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
             <?php $hostName = $_SERVER['HTTP_HOST'];
             if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
-                <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
+                <a href="<?= $_SERVER['HTTP_REFERER']; ?>">
                     <button class="btn" type="button">前の画面に戻る</button>
                 </a>
             <?php endif; ?>
