@@ -6,6 +6,7 @@ require_once('fanctions.php');
 //　セッションタイムアウト判定
 if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
     $_SESSION = array();
+    session_destroy();
     $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
 }
 
@@ -23,23 +24,25 @@ if (!empty($_POST)) {
     if ($loginJudge == '未ログイン') {
         $error = 'ログインされていません。';
     }
-    if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION['csrfToken']) {
+    if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION['thread']['csrfToken']) {
         $_SESSION = array();
+        session_destroy();
         header('Location: request.error.php');
         exit();
     }
 }
-if (!isset($_SESSION["csrfToken"])) {
+if (!isset($_SESSION['thread']['csrfToken'])) {
     $_SESSION = array();
+    session_destroy();
     header('Location: request.error.php');
     exit();
 }
 
 // スレッド作成ボタンが押されたらDBに保存し完了画面に遷移
-if (!isset($error) && isset($_POST['cfm'])) {
+if (!isset($error) && !empty($_POST)) {
     $name = $_SESSION['loginName'];
-    $title = $_SESSION['title'];
-    $content = $_SESSION['content'];
+    $title = $_SESSION['thread']['title'];
+    $content = $_SESSION['thread']['content'];
 
     $stmt = $dbh->prepare('INSERT INTO threads (name, title, content) VALUES (:name, :title, :content)');
     $stmt->bindValue(':name', $name, PDO::PARAM_STR);
@@ -47,7 +50,7 @@ if (!isset($error) && isset($_POST['cfm'])) {
     $stmt->bindValue(':content', $content, PDO::PARAM_STR);
     $stmt->execute();
 
-    unset($_SESSION['title'], $_SESSION['content'], $_SESSION['csrfToken']);
+    unset($_SESSION['thread']);
     header('Location: new_thread_cpl.php');
     exit();
 }
@@ -88,7 +91,7 @@ if (!isset($error)) {
 <body>
     <div class="header">
         <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
-        <p><?php echo $loginJudge; ?></p>
+        <p><?= $loginJudge; ?></p>
         <button class="menu_btn">Menu</button>
         <nav class="menu_list">
             <ul>
@@ -111,13 +114,13 @@ if (!isset($error)) {
         </div>
 
         <div class="content">
-            <h4><?php echo $error; ?></h4>
-            <form class="content_center" action="" method="post">
-                <input type="hidden" name="token" value="<?php echo $_SESSION['csrfToken'] ?>">
+            <h4><?= $error; ?></h4>
+            <form action="" method="post">
+                <input type="hidden" name="token" value="<?= $_SESSION['thread']['csrfToken'] ?>">
                 <p>【タイトル】</p>
-                <p><?php echo $_SESSION['title'] ?></p>
+                <p><?= $_SESSION['thread']['title'] ?></p>
                 <p><br>【内容】</p>
-                <p><?php echo $_SESSION['content'] ?></p>
+                <p><?= $_SESSION['thread']['content'] ?></p>
                 <p><input class="btn btn_blue" type="submit" name="cfm" value="スレッドを作成"></p>
             </form>
         </div>
@@ -126,7 +129,7 @@ if (!isset($error)) {
             <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
             <?php $hostName = $_SERVER['HTTP_HOST'];
             if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
-                <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
+                <a href="<?= $_SERVER['HTTP_REFERER']; ?>">
                     <button class="btn" type="button">前の画面に戻る</button>
                 </a>
             <?php endif; ?>
