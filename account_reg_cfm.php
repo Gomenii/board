@@ -12,14 +12,16 @@ if (isset($_SESSION['loginName'])) {
 
 // リクエストエラー処理
 if (!empty($_POST)) {
-    if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION['csrfToken']) {
+    if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['accountRegCsrfToken']) {
         $_SESSION = array();
+        session_destroy();
         header('Location: request.error.php');
         exit();
     }
 }
-if (!isset($_SESSION["csrfToken"])) {
+if (!isset($_SESSION['accountRegCsrfToken'])) {
     $_SESSION = array();
+    session_destroy();
     header('Location: request.error.php');
     exit();
 }
@@ -35,6 +37,7 @@ if (!empty($_POST)) {
     $stmt->execute();
 
     $_SESSION = array();
+    session_destroy();
     header('Location: account_reg_cpl.php');
     exit();
 }
@@ -70,7 +73,7 @@ if (!empty($_POST)) {
     <div class="header">
         <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
-        <p><?php echo $loginJudge; ?></p>
+        <p><?= $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
                 <li><a href="toppage.php">トップページ</a></li>
@@ -91,9 +94,9 @@ if (!empty($_POST)) {
         <div class="content">
             <form action="" method="POST">
                 <h4>下記の内容でアカウントを登録します。</h4>
-                <input type="hidden" name="token" value="<?php echo $_SESSION['csrfToken'] ?>">
-                <p>ユーザー名 : <?php echo $_SESSION['newName']; ?></p>
-                <p>パスワード : <?php echo $_SESSION['newPass']; ?></p>
+                <input type="hidden" name="token" value="<?= $_SESSION['accountRegCsrfToken'] ?>">
+                <p>ユーザー名 : <?= $_SESSION['newName']; ?></p>
+                <p>パスワード : <?= $_SESSION['newPass']; ?></p>
                 <p><input class="btn btn_blue" type="submit" name="account_reg_btn" value="新規登録する"></p>
             </form>
         </div>
@@ -102,7 +105,7 @@ if (!empty($_POST)) {
             <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
             <?php $hostName = $_SERVER['HTTP_HOST'];
             if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
-                <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
+                <a href="<?= $_SERVER['HTTP_REFERER']; ?>">
                     <button class="btn" type="button">前の画面に戻る</button>
                 </a>
             <?php endif; ?>

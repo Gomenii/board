@@ -12,8 +12,9 @@ if (isset($_SESSION['loginName'])) {
 
 // リクエストエラー処理
 if (!empty($_POST)) {
-    if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION['csrfToken']) {
+    if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['accountRegCsrfToken']) {
         $_SESSION = array();
+        session_destroy();
         header('Location: request.error.php');
         exit();
     }
@@ -22,7 +23,7 @@ if (!empty($_POST)) {
 // トークン作成
 $tokenByte = openssl_random_pseudo_bytes(16);
 $token = bin2hex($tokenByte);
-$_SESSION['csrfToken'] = $token;
+$_SESSION['accountRegCsrfToken'] = $token;
 
 
 // 新規アカウント条件　 
@@ -131,7 +132,7 @@ if (!isset($errors)) {
     <div class="header">
         <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
-        <p><?php echo $loginJudge; ?></p>
+        <p><?= $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
                 <li><a href="toppage.php">トップページ</a></li>
@@ -155,7 +156,7 @@ if (!isset($errors)) {
                 } ?></h4>
 
             <form action="" method="POST">
-                <input type="hidden" name="token" value="<?php echo $_SESSION['csrfToken'] ?>">
+                <input type="hidden" name="token" value="<?= $_SESSION['accountRegCsrfToken'] ?>">
                 <p>ユーザー名　<input type="text" name="name" value="<?php if (isset($_POST['name'])) {
                                                                     echo htmlsc($_POST['name']);
                                                                 } ?>"></p>
@@ -179,7 +180,7 @@ if (!isset($errors)) {
             <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
             <?php $hostName = $_SERVER['HTTP_HOST'];
             if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
-                <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">
+                <a href="<?= $_SERVER['HTTP_REFERER']; ?>">
                     <button class="btn" type="button">前の画面に戻る</button>
                 </a>
             <?php endif; ?>

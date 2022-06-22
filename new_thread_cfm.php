@@ -24,14 +24,14 @@ if (!empty($_POST)) {
     if ($loginJudge == '未ログイン') {
         $error = 'ログインされていません。';
     }
-    if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION['thread']['csrfToken']) {
+    if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['threadCsrfToken']) {
         $_SESSION = array();
         session_destroy();
         header('Location: request.error.php');
         exit();
     }
 }
-if (!isset($_SESSION['thread']['csrfToken'])) {
+if (!isset($_SESSION['threadCsrfToken'])) {
     $_SESSION = array();
     session_destroy();
     header('Location: request.error.php');
@@ -41,8 +41,8 @@ if (!isset($_SESSION['thread']['csrfToken'])) {
 // スレッド作成ボタンが押されたらDBに保存し完了画面に遷移
 if (!isset($error) && !empty($_POST)) {
     $name = $_SESSION['loginName'];
-    $title = $_SESSION['thread']['title'];
-    $content = $_SESSION['thread']['content'];
+    $title = $_SESSION['title'];
+    $content = $_SESSION['content'];
 
     $stmt = $dbh->prepare('INSERT INTO threads (name, title, content) VALUES (:name, :title, :content)');
     $stmt->bindValue(':name', $name, PDO::PARAM_STR);
@@ -50,7 +50,7 @@ if (!isset($error) && !empty($_POST)) {
     $stmt->bindValue(':content', $content, PDO::PARAM_STR);
     $stmt->execute();
 
-    unset($_SESSION['thread']);
+    unset($_SESSION['title'], $_SESSION['content'], $_SESSION['threadCsrfToken']);
     header('Location: new_thread_cpl.php');
     exit();
 }
@@ -116,11 +116,11 @@ if (!isset($error)) {
         <div class="content">
             <h4><?= $error; ?></h4>
             <form action="" method="post">
-                <input type="hidden" name="token" value="<?= $_SESSION['thread']['csrfToken'] ?>">
+                <input type="hidden" name="token" value="<?= $_SESSION['threadCsrfToken']; ?>">
                 <p>【タイトル】</p>
-                <p><?= $_SESSION['thread']['title'] ?></p>
+                <p><?= $_SESSION['title']; ?></p>
                 <p><br>【内容】</p>
-                <p><?= $_SESSION['thread']['content'] ?></p>
+                <p><?= $_SESSION['content']; ?></p>
                 <p><input class="btn btn_blue" type="submit" name="cfm" value="スレッドを作成"></p>
             </form>
         </div>

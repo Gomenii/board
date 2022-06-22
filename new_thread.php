@@ -24,7 +24,7 @@ if (!empty($_POST)) {
     if ($loginJudge == '未ログイン') {
         $errors['notLogin'] = 'ログインされていません。';
     }
-    if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION['thread']['csrfToken']) {
+    if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['threadCsrfToken']) {
         $_SESSION = array();
         session_destroy();
         header('Location: request.error.php');
@@ -35,7 +35,7 @@ if (!empty($_POST)) {
 // トークン作成
 $tokenByte = openssl_random_pseudo_bytes(16);
 $token = bin2hex($tokenByte);
-$_SESSION['thread'] = ['csrfToken'  => $token];
+$_SESSION['threadCsrfToken'] = $token;
 
 
 // スレッド作成条件　 ※ログイン必須
@@ -62,7 +62,7 @@ if (!isset($errors['notLogin'])) {
         if ($titleLength > $titleMaximum) {
             $errors[] = '※タイトルが1～32文字ではありません。';
         }
-    } elseif (isset($_SESSION['thread']['title'])) {
+    } elseif (isset($_SESSION['title'])) {
         $errors[] = '※タイトルを再入力してください（1～32文字以内）';
     } else {
         $errors[] = '※タイトルを入力してください（1～32文字以内）';
@@ -72,7 +72,7 @@ if (!isset($errors['notLogin'])) {
         if ($contentLength > $contentMaximum) {
             $errors[] = '※内容が1～1000文字ではありません。';
         }
-    } elseif (isset($_SESSION['thread']['content'])) {
+    } elseif (isset($_SESSION['content'])) {
         $errors[] = '※内容を再入力してください（1～1000文字以内）';
     } else {
         $errors[] = '※内容を入力してください（1～1000文字以内）';
@@ -81,8 +81,8 @@ if (!isset($errors['notLogin'])) {
 
 // エラーがない場合は確認画面に遷移
 if (!isset($errors)) {
-    $_SESSION['thread'] = ['title' => htmlsc($postTitle)];
-    $_SESSION['thread'] = ['content' => nl2br(htmlsc($postContent))];
+    $_SESSION['title'] = htmlsc($postTitle);
+    $_SESSION['content'] = nl2br(htmlsc($postContent));
     header('location: new_thread_cfm.php');
     exit();
 }
@@ -146,14 +146,14 @@ if (!isset($errors)) {
                     echo '<p>' . $error . '</p>';
                 } ?></h4>
             <form action="" method="POST">
-                <input type="hidden" name="token" value="<?= $_SESSION['thread']['csrfToken']; ?>">
+                <input type="hidden" name="token" value="<?= $_SESSION['threadCsrfToken']; ?>">
                 <p>【タイトル】</p>
-                <p><textarea name="title" cols="40" rows="2"><?php if (isset($_SESSION['thread']['title'])) {
-                                                                    echo $_SESSION['thread']['title'];
+                <p><textarea name="title" cols="40" rows="2"><?php if (isset($_SESSION['content'])) {
+                                                                    echo $_SESSION['title'];
                                                                 } ?></textarea></p>
                 <p><br>【内容】</p>
-                <p><textarea name="content" cols="40" rows="10"><?php if (isset($_SESSION['thread']['content'])) {
-                                                                    echo strip_tags($_SESSION['thread']['content']);
+                <p><textarea name="content" cols="40" rows="10"><?php if (isset($_SESSION['content'])) {
+                                                                    echo strip_tags($_SESSION['content']);
                                                                 } ?></textarea></p>
                 <p><input class="btn btn_blue" type="submit" name="cfm" value="確認画面にすすむ"></p>
             </form>
