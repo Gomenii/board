@@ -1,13 +1,16 @@
 @charset "UTF-8";
 
 body {
+    width: 100%;
     margin: 0;
 }
 
+p {
+    margin-bottom: 30px;
+}
 
 /* ヘッダー */
 .header {
-    width: 100%;
     height: 60px;
     background-color: #0095d9;
 }
@@ -33,24 +36,40 @@ body {
 
 
 /* メイン */
-.main {
+.head {
+    margin: 20px 0;
     text-align: center;
 }
 
-.head {
-    margin-bottom: 20px;
-}
 
 .content {
-    display: inline-block;    
+    text-align: center;
+}
+
+.content_left {
+    width: 80%;
+    margin: auto;
     text-align: left;
 }
 
-.content_center {
-    text-align: center;
+.content_res {
+    margin-top: 100px;
+}
+
+.content_res p {
+    margin: 10px 0 60px 0;
+}
+
+.content_account_reg_str p {
+    margin: 0 30px;
+}
+
+.content_account_reg_str h3 {
+    margin: 50px 0 0 0;
 }
 
 .bottom {
+    text-align: center;
     margin: 30px;
 }
 
