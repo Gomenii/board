@@ -71,7 +71,7 @@ if (!isset($error)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="sample text">
     <link rel="stylesheet" type="text/css" href="board.css">
-    <title>スレッド作成</title>
+    <title>スレッド作成確認</title>
     <script type="text/javascript">
         window.addEventListener('DOMContentLoaded', () => {
             const btn = document.querySelector('.menu_btn');
@@ -107,7 +107,7 @@ if (!isset($error)) {
     <div class="main">
 
         <div class="head">
-            <h2 class="head_title">スレッド作成</h2>
+            <h2 class="head_title">スレッド作成確認</h2>
             <?php if (isset($display)) {
                 echo $display;
             } ?>
