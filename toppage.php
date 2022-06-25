@@ -104,7 +104,8 @@ var_dump($_SESSION);
         </div>
 
         <div class="content">
-            <div class="content_top">
+            <div class="content_thread_list">
+                <h4>～最新のスレッド5件表示中～</h4>
                 <?php
                 foreach ($data as $a) {
                     echo '<p>タイトル：' . '<a href="thread.php?id=' . $a['id'] . '">' . mb_strimwidth($a['title'], 0, 64, '...', 'UTF-8')  . '</a></p>';
