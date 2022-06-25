@@ -19,29 +19,26 @@ if (isset($_SESSION['loginName'])) {
     $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
 }
 
-// 最新のスレッド50件のデータをDBから取得
-$stmt = $dbh->prepare('SELECT * FROM threads ORDER BY id DESC LIMIT 50');
+// 最新のスレッド5件のデータを取得
+$stmt = $dbh->prepare('SELECT * FROM threads ORDER BY id DESC LIMIT 5');
 $stmt->execute();
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // 不要なセッション情報の削除
-$backPage = $_SERVER['HTTP_REFERER'];
-if (strpos($backPage, 'new_thread') !== false) {
-    unset($_SESSION['title'], $_SESSION['content'], $_SESSION['threadCsrfToken']);
+if ($loginJudge == 'ログイン中') {
+    if (isset($_SESSION['threadCsrfToken'])) {
+        unset($_SESSION['threadCsrfToken'], $_SESSION['title'], $_SESSION['content']);
+    }
+    if (isset($_SESSION['resCsrfToken'])) {
+        unset($_SESSION['resCsrfToken']);
+    }
+    if (isset($_SESSION['accountRegCsrfToken'])) {
+        unset($_SESSION['accountRegCsrfToken'], $_SESSION['newName'], $_SESSION['newPass']);
+    }
+    if (isset($_SESSION['loginCsrfToken'])) {
+        unset($_SESSION['loginCsrfToken']);
+    }
 }
-
-if (strpos($backPage, 'thread') !== false) {
-    unset($_SESSION['resCsrfToken']);
-}
-
-if (strpos($backPage, 'account_reg') !== false) {
-    unset($_SESSION['newName'], $_SESSION['newPass'], $_SESSION['accountRegCsrfToken']);
-}
-
-if (strpos($backPage, 'login') !== false) {
-    unset($_SESSION['loginCsrfToken']);
-}
-
 var_dump($_SESSION);
 ?>
 
@@ -91,41 +88,34 @@ var_dump($_SESSION);
     <div class="main">
 
         <div class="head">
-            <h2> <?php
-                    if (isset($_SESSION['loginName'])) {
-                        echo 'こんにちは！' . $_SESSION['loginName'] . 'さん！';
-                    } else {
-                        echo 'この掲示板はポートフォリオ用となっています';
-                    }
-                    ?> </h2>
             <?php
+            if (isset($_SESSION['loginName'])) {
+                echo '<h2>こんにちは！' . $_SESSION['loginName'] . 'さん！</h2>';
+            } else {
+                echo '<h2>この掲示板はポートフォリオ用となっています</h2>';
+            }
             if (isset($display)) {
                 echo $display;
-            } ?>
-            <p><a href="new_thread.php">
-                    <button class="btn btn_blue" type="button">スレッド作成</button>
-                </a></p>
-        </div>
-
-        <div class="content">
-            <?php
-            for ($a = 0; $a < $data[0]['id']; $a++) {
-                if (isset($data[$a])) {
-                    echo 'タイトル：' . '<a href="thread' . $data[$a]['id'] . '.php">' . mb_strimwidth($data[$a]['title'], 0, 64, '...', 'UTF-8')  . '</a>' . '<br>';
-                    echo '作成者：' . $data[$a]['name'] . '　作成日時：' . $data[$a]['created'] . '<br>' . '<br>' . '<br>';
-                }
+            }
+            if (isset($_SESSION['loginName'])) {
+                echo '<p><a href="new_thread.php"><button class="btn btn_blue" type="button">スレッド作成</button></a></p>';
             }
             ?>
         </div>
 
+        <div class="content">
+            <div class="content_top">
+                <?php
+                foreach ($data as $a) {
+                    echo '<p>タイトル：' . '<a href="thread.php?id=' . $a['id'] . '">' . mb_strimwidth($a['title'], 0, 64, '...', 'UTF-8')  . '</a></p>';
+                    echo '作成者：' . $a['name'] . '　作成日時：' . $a['created'];
+                }
+                ?>
+            </div>
+        </div>
+
         <div class="bottom">
-            <!-- 前のページが存在している & 前のページのアドレスにサイトのホスト名が含まれていれば、前のページに戻るボタンを表示する -->
-            <?php $hostName = $_SERVER['HTTP_HOST'];
-            if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $hostName) !== false) : ?>
-                <a href="<?= $_SERVER['HTTP_REFERER']; ?>">
-                    <button class="btn" type="button">前の画面に戻る</button>
-                </a>
-            <?php endif; ?>
+            <p><a href="thread_list.php"><button class="btn btn_blue" type="button">もっとみる</button></a></p>
         </div>
 
     </div>
