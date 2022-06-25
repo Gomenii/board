@@ -64,6 +64,11 @@ p {
     text-align: left;
 }
 
+.content_res_delete {
+    color: #f00;
+}
+
+.content_mypage h3,
 .content_res {
     margin-top: 100px;
 }
