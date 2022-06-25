@@ -88,7 +88,7 @@ if (isset($_SESSION['loginName'])) {
             <?php
             if (isset($display)) {
                 echo $display;
-            } 
+            }
             ?>
 
             <div class="content_left content_mypage">
@@ -97,7 +97,7 @@ if (isset($_SESSION['loginName'])) {
                 <?php
                 if ($loginJudge == 'ログイン中') {
                     foreach ($data as $array) {
-                        echo '<p>' . 'タイトル：' . '<a href="thread' . $array['id'] . '.php">' . $array['title'] . '</a>';
+                        echo '<p>' . 'タイトル：' . '<a href="thread.php?id=' . $array['id'] . '">' . $array['title'] . '</a>';
                         echo '<br>' . '作成日時：' . $array['created'];
                     }
                 }
@@ -110,7 +110,7 @@ if (isset($_SESSION['loginName'])) {
                 <?php
                 if ($loginJudge == 'ログイン中') {
                     foreach ($resData as $resArray) {
-                        echo '<p>' . 'タイトル：' . '<a href="thread' . $resArray['thread_id'] . '.php">' . $resArray['thread_title'] . '</a>';
+                        echo '<p>' . 'タイトル：' . '<a href="thread.php?id=' . $resArray['thread_id'] . '">' . $resArray['thread_title'] . '</a>';
                         echo '<br>' . 'レス内容：' . $resArray['content'];
                         echo '<br>' . '投稿日時：' . $resArray['created'] .
                             '　<a class="content_res_delete" href="res_delete.php?id=' . $resArray['id'] . '">[削除]</a>';
