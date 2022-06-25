@@ -26,6 +26,24 @@ foreach ($pages as $page) {
     echo '<a href=toppage.' . $page . 'php>' . $page . '</a>　';
 }
 
+
+// 書き込みファイル読み込み
+$files = file_get_contents('thread.php');
+
+// スレッドidを加えてファイル名に
+$fileName = 'thread' . $threadId . '.php';
+
+// 書き込みオリジナルファイルから変更点を置き換える
+$files = str_replace("okikae", $threadId, $files);
+
+// 文字コードをUTFに変換
+$files = mb_convert_encoding($files, "UTF-8", "AUTO");
+
+// ファイル生成＆書き込み
+$handle = fopen($fileName, 'w');
+fwrite($handle, $files);
+fclose($handle);
+
 ?>
 
 
