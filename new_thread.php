@@ -63,9 +63,9 @@ if (!isset($errors['notLogin'])) {
             $errors[] = '※タイトルが1～32文字ではありません。';
         }
     } elseif (isset($_SESSION['title'])) {
-        $errors[] = '※タイトルを再入力してください（1～32文字以内）';
+        $errors[] = 'タイトルを再入力してください（1～32文字以内）';
     } else {
-        $errors[] = '※タイトルを入力してください（1～32文字以内）';
+        $errors[] = 'タイトルを入力してください（1～32文字以内）';
     }
 
     if (isset($postContent)) {
@@ -73,9 +73,9 @@ if (!isset($errors['notLogin'])) {
             $errors[] = '※内容が1～1000文字ではありません。';
         }
     } elseif (isset($_SESSION['content'])) {
-        $errors[] = '※内容を再入力してください（1～1000文字以内）';
+        $errors[] = '内容を再入力してください（1～1000文字以内）';
     } else {
-        $errors[] = '※内容を入力してください（1～1000文字以内）';
+        $errors[] = '内容を入力してください（1～1000文字以内）';
     }
 }
 
