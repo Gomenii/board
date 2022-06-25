@@ -38,19 +38,26 @@ $token = bin2hex($tokenByte);
 $_SESSION['resCsrfToken'] = $token;
 
 // ファイル生成時に割り振られたスレッドidを元に、スレッド情報を取得（okikaeは置き換えられる）
-$threadid = 'okikae';
+$threadId = 'okikae';
 $stmt = $dbh->prepare('SELECT * FROM threads WHERE id = :id');
-$stmt->bindValue(':id', $threadid, PDO::PARAM_STR);
+$stmt->bindValue(':id', $threadId, PDO::PARAM_INT);
 $stmt->execute();
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // レス情報取得
 $resStmt = $dbh->prepare('SELECT * FROM posts WHERE thread_id = :thread_id ORDER BY id DESC');
-$resStmt->bindValue(':thread_id', $threadid, PDO::PARAM_STR);
+$resStmt->bindValue(':thread_id', $threadId, PDO::PARAM_INT);
 $resStmt->execute();
 $resData = $resStmt->fetchAll(PDO::FETCH_ASSOC);
+$resNewest = 1;
 
+// $resStmt->fetch(PDO::FETCH_ASSOC);
 
+var_dump($resNewest);
+
+if (!empty($resNewest)) {
+    $number = $resNewest['number'] + 1;
+}
 
 // レス投稿条件　 ※ログイン必須　内容：1～1000文字以内（全角）1～4000文字以内（半角）
 // レスのエラー処理
@@ -65,13 +72,16 @@ if (!isset($errors)) {
     }
 }
 
-// エラーがない場合はレスを投稿し、リダイレクト
+// エラーがない場合はレスをDBに保存し、リダイレクト
 if (!isset($errors) && !empty($_POST)) {
+    $threadTitle = $data['title'];
     $name = $_SESSION['loginName'];
     $content = htmlsc($_POST['content']);
 
-    $stmt = $dbh->prepare('INSERT INTO posts (thread_id, name, content) VALUES (:thread_id, :name, :content)');
-    $stmt->bindValue(':thread_id', $threadid, PDO::PARAM_STR);
+    $stmt = $dbh->prepare('INSERT INTO posts (number, thread_id, thread_title, name, content) VALUES (:number, :thread_id, :thread_title, :name, :content)');
+    $stmt->bindValue(':number', $number, PDO::PARAM_INT);
+    $stmt->bindValue(':thread_id', $threadId, PDO::PARAM_INT);
+    $stmt->bindValue(':thread_title', $threadTitle, PDO::PARAM_STR);
     $stmt->bindValue(':name', $name, PDO::PARAM_STR);
     $stmt->bindValue(':content', $content, PDO::PARAM_STR);
     $stmt->execute();
@@ -152,10 +162,13 @@ if (!isset($errors) && !empty($_POST)) {
                 <?php
                 if (!empty($resData)) {
                     $count = count($resData);
-                    echo '<h4>---レス投稿（' . $count . '件）---</h4>';
+                    echo '<h4>---レス投稿---</h4>';
                     foreach ($resData as $rd) {
-                        echo '[' . $count . '] 投稿者:<b>' . $rd['name'] . '</b>　投稿日時:' . $rd['created'] . '<br>'
-                            . '<p>' . $rd['content'] . '</p>' . '<p>' . '</p>';
+                        echo '[' . $count . '] 投稿者:<b>' . $rd['name'] . '</b>　投稿日時:' . $rd['created'];
+                        if (isset($_SESSION['loginName']) && $_SESSION['loginName'] === $rd['name']) {
+                            echo '　<a class="content_res_delete" href="res_delete.php?id=' . $rd['id'] . '">[削除]</a>';
+                        }
+                        echo '<p>' . $rd['content'] . '</p>';
                         $count--;
                     }
                 } else {
@@ -169,7 +182,7 @@ if (!isset($errors) && !empty($_POST)) {
                     <input type="hidden" name="token" value="<?= $_SESSION['resCsrfToken']; ?>">
                     <p>レス投稿は1～1000文字以内です。</p>
                     <p><textarea name="content" cols="40" rows="6"></textarea></p>
-                    <p><input class="btn btn_small btn_blue" type="submit" name="res" value="レス投稿"></p>
+                    <p><input class="btn btn_blue" type="submit" name="res" value="レス投稿"></p>
                 </form>
             </div>
 
@@ -177,8 +190,8 @@ if (!isset($errors) && !empty($_POST)) {
 
         <div class="bottom">
             <p><a href="toppage.php">
-                    <button class="btn" type="button">トップページへ</button></p>
-            </a>
+                    <button class="btn" type="button">トップページへ</button>
+                </a></p>
         </div>
 
     </div>
