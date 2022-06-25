@@ -37,31 +37,33 @@ $tokenByte = openssl_random_pseudo_bytes(16);
 $token = bin2hex($tokenByte);
 $_SESSION['resCsrfToken'] = $token;
 
-// ファイル生成時に割り振られたスレッドidを元に、スレッド情報を取得（okikaeは置き換えられる）
-$threadId = 'okikae';
+// URLで受け渡されたスレッドidを元にスレッド情報を取得
+$threadId = $_REQUEST['id'];
 $stmt = $dbh->prepare('SELECT * FROM threads WHERE id = :id');
 $stmt->bindValue(':id', $threadId, PDO::PARAM_INT);
 $stmt->execute();
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// レス情報取得
+// レス情報全件取得
 $resStmt = $dbh->prepare('SELECT * FROM posts WHERE thread_id = :thread_id ORDER BY id DESC');
 $resStmt->bindValue(':thread_id', $threadId, PDO::PARAM_INT);
 $resStmt->execute();
 $resData = $resStmt->fetchAll(PDO::FETCH_ASSOC);
-$resNewest = 1;
 
-// $resStmt->fetch(PDO::FETCH_ASSOC);
-
-var_dump($resNewest);
+// 最新レス情報１件取得
+$resNewestStmt = $dbh->prepare('SELECT * FROM posts WHERE thread_id = :thread_id ORDER BY id DESC');
+$resNewestStmt->bindValue(':thread_id', $threadId, PDO::PARAM_INT);
+$resNewestStmt->execute();
+$resNewest = $resNewestStmt->fetch(PDO::FETCH_ASSOC);
 
 if (!empty($resNewest)) {
     $number = $resNewest['number'] + 1;
+} else {
+    $number = 1;
 }
 
 // レス投稿条件　 ※ログイン必須　内容：1～1000文字以内（全角）1～4000文字以内（半角）
 // レスのエラー処理
-
 if (!isset($errors)) {
     if (isset($_POST['content'])) {
         $contentMaximum = 4000;
@@ -76,7 +78,7 @@ if (!isset($errors)) {
 if (!isset($errors) && !empty($_POST)) {
     $threadTitle = $data['title'];
     $name = $_SESSION['loginName'];
-    $content = htmlsc($_POST['content']);
+    $content = nl2br(htmlsc($_POST['content']));
 
     $stmt = $dbh->prepare('INSERT INTO posts (number, thread_id, thread_title, name, content) VALUES (:number, :thread_id, :thread_title, :name, :content)');
     $stmt->bindValue(':number', $number, PDO::PARAM_INT);
@@ -86,7 +88,7 @@ if (!isset($errors) && !empty($_POST)) {
     $stmt->bindValue(':content', $content, PDO::PARAM_STR);
     $stmt->execute();
 
-    header('location:' . $_SERVER['PHP_SELF']);
+    header('location:' . $_SERVER['HTTP_REFERER']);
     exit();
 }
 ?>
@@ -161,15 +163,33 @@ if (!isset($errors) && !empty($_POST)) {
             <div class="content_left content_res">
                 <?php
                 if (!empty($resData)) {
-                    $count = count($resData);
                     echo '<h4>---レス投稿---</h4>';
+                    $resCount = $resNewest['number'];
                     foreach ($resData as $rd) {
-                        echo '[' . $count . '] 投稿者:<b>' . $rd['name'] . '</b>　投稿日時:' . $rd['created'];
+                        // 削除されたレスに「削除されました表示」
+                        if ($resCount != $rd['number']) {
+                            $count = 0;
+                            for ($a = $resCount; $a > $rd['number']; $a--) {
+                                echo '<p>[' . $a . '] は削除されました。</p>';
+                                $count++;
+                            }
+                            $resCount -= $count;
+                        }
+                        $resCount -= 1;
+
+                        // レス内容出力処理（自分のレスの場合は削除ボタン表示）
+                        echo '[<a class="" href="res_reply.php?id=' . $rd['id'] . '">' . $rd['number'] . '</a>] 投稿者:<b>' . $rd['name'] . '</b>　投稿日時:' . $rd['created'];
                         if (isset($_SESSION['loginName']) && $_SESSION['loginName'] === $rd['name']) {
                             echo '　<a class="content_res_delete" href="res_delete.php?id=' . $rd['id'] . '">[削除]</a>';
                         }
                         echo '<p>' . $rd['content'] . '</p>';
-                        $count--;
+                    }
+
+                    // 最古の投稿が[1]ではない場合、最古の投稿から[1]までの「削除されました表示」出力
+                    if ($resCount !== 0) {
+                        for ($b = $resCount; $b > 0; $b--) {
+                            echo '<p>[' . $b . '] は削除されました。</p>';
+                        }
                     }
                 } else {
                     echo '<h4>---レス投稿は、まだありません。---</h4>';
@@ -180,8 +200,13 @@ if (!isset($errors) && !empty($_POST)) {
             <div class="content_form">
                 <form action="" method="POST">
                     <input type="hidden" name="token" value="<?= $_SESSION['resCsrfToken']; ?>">
-                    <p>レス投稿は1～1000文字以内です。</p>
-                    <p><textarea name="content" cols="40" rows="6"></textarea></p>
+                    <p>レス投稿は1～1000文字以内でお願いします。</p>
+                    <p>[ ]内の番号をクリックすることで返信ができます。</p>
+                    <p><textarea name="content" cols="40" rows="6"><?php if (isset($_SESSION['resNumber'])) {
+                                                                        echo '>>' . $_SESSION['resNumber'] . '　' . $_SESSION['resName'] . 'さん&#13;&#13;';
+                                                                        unset($_SESSION['resNumber'], $_SESSION['resName']);
+                                                                    }
+                                                                    ?></textarea></p>
                     <p><input class="btn btn_blue" type="submit" name="res" value="レス投稿"></p>
                 </form>
             </div>
