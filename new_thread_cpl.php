@@ -24,24 +24,6 @@ $stmt = $dbh->prepare('SELECT * FROM threads ORDER BY id DESC LIMIT 1');
 $stmt->execute();
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
 $threadId = $data['id'];
-
-// 書き込みファイル読み込み
-$files = file_get_contents('thread.php');
-
-// スレッドidを加えてファイル名に
-$fileName = 'thread' . $threadId . '.php';
-
-// 書き込みオリジナルファイルから変更点を置き換える
-$files = str_replace("okikae", $threadId, $files);
-
-// 文字コードをUTFに変換
-$files = mb_convert_encoding($files, "UTF-8", "AUTO");
-
-// ファイル生成＆書き込み
-$handle = fopen($fileName, 'w');
-fwrite($handle, $files);
-fclose($handle);
-
 ?>
 
 
@@ -54,7 +36,7 @@ fclose($handle);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="sample text">
     <link rel="stylesheet" type="text/css" href="board.css">
-    <title>スレッド作成</title>
+    <title>スレッド作成完了</title>
     <script type="text/javascript">
         window.addEventListener('DOMContentLoaded', () => {
             const btn = document.querySelector('.menu_btn');
@@ -90,18 +72,18 @@ fclose($handle);
     <div class="main">
 
         <div class="head">
-            <h2 class="head_title">スレッド作成</h2>
+            <h2 class="head_title">スレッド作成完了</h2>
             <?php if (isset($display)) {
                 echo $display;
             } ?>
         </div>
 
         <div class="content">
-                <h4>スレッドを作成しました。</h4>
-                <p>※ブラウザの戻るボタンなどで、前の画面に戻らないでください。</p>
-                <p><a href="<?= $fileName ?>">
-                        <button class="btn btn_big btn_blue" type="button">作成したスレッドへ</button>
-                    </a></p>
+            <h4>スレッドを作成しました。</h4>
+            <p>※ブラウザの戻るボタンなどで、前の画面に戻らないでください。</p>
+            <p><a href="thread.php?id=<?= $threadId ?>">
+                    <button class="btn btn_big btn_blue" type="button">作成したスレッドへ</button>
+                </a></p>
         </div>
 
         <div class="bottom">
