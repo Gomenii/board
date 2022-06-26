@@ -102,7 +102,7 @@ if (isset($passMatch)) {
         setcookie('loginName', $_POST['name'], time() + 60 * 60 * 24);
         setcookie('loginPass', $_POST['pass'], time() + 60 * 60 * 24);
         unset($_SESSION['loginCsrfToken']);
-        header('Location: toppage.php');
+        header('Location: index.php');
         exit();
     } else {
         $errors[] = '※ユーザー名またはパスワードが違います。';
@@ -140,12 +140,12 @@ if (isset($passMatch)) {
 <body>
 
     <div class="header">
-        <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
+        <h1 class="header_title"><a href="index.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
         <p><?= $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
-                <li><a href="toppage.php">トップページ</a></li>
+                <li><a href="index.php">トップページ</a></li>
                 <li><a href="mypage.php">マイページ</a></li>
                 <li><a href="logout_cfm.php">ログアウト</a></li>
                 <li><a href="inquiry.php">お問い合わせ</a></li>

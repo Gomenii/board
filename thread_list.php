@@ -73,12 +73,12 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
     <div class="header">
-        <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
+        <h1 class="header_title"><a href="index.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
         <p><?= $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
-                <li><a href="toppage.php">トップページ</a></li>
+                <li><a href="index.php">トップページ</a></li>
                 <li><a href="mypage.php">マイページ</a></li>
                 <li><a href="logout_cfm.php">ログアウト</a></li>
                 <li><a href="inquiry.php">お問い合わせ</a></li>
@@ -143,7 +143,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 echo '<p><a href="new_thread.php"><button class="btn btn_blue" type="button">スレッド作成</button></a></p>';
             }
             ?>
-            <p><a href="toppage.php"><button class="btn" type="button">トップページへ</button></a></p>
+            <p><a href="index.php"><button class="btn" type="button">トップページへ</button></a></p>
         </div>
 
     </div>

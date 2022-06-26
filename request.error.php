@@ -39,12 +39,12 @@ if (isset($_SESSION['loginName'])) {
 
 <body>
     <div class="header">
-        <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
+        <h1 class="header_title"><a href="index.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
         <p><?php echo $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
-                <li><a href="toppage.php">トップページ</a></li>
+                <li><a href="index.php">トップページ</a></li>
                 <li><a href="mypage.php">マイページ</a></li>
                 <li><a href="logout_cfm.php">ログアウト</a></li>
                 <li><a href="inquiry.php">お問い合わせ</a></li>
@@ -65,7 +65,7 @@ if (isset($_SESSION['loginName'])) {
         </div>
 
         <div class="bottom">
-            <a href="toppage.php">
+            <a href="index.php">
                 <button class="btn" type="button">トップページへ</button>
             </a>
             <p><a href="login.php">
