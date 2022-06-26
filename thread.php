@@ -214,8 +214,8 @@ if (!isset($errors) && !empty($_POST)) {
         </div>
 
         <div class="bottom">
-            <p><a href="toppage.php">
-                    <button class="btn" type="button">トップページへ</button>
+            <p><a href="thread_list.php">
+                    <button class="btn" type="button">スレッド一覧へ</button>
                 </a></p>
         </div>
 
