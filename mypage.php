@@ -91,39 +91,17 @@ if (isset($_SESSION['loginName'])) {
             }
             ?>
 
-            <div class="content_left content_mypage">
-                <h3>---作成したスレッド一覧（新着順）---</h3>
+            <div class="content_left">
+                <h3><a href="mypage_thread.php">作成したスレッド一覧をみる</a></h3>
+                <p>あなたが作成したスレッドを確認することができます。</p>
                 <p>スレッドの削除は原則できません。</p>
-                <?php
-                if ($loginJudge == 'ログイン中') {
-                    foreach ($data as $array) {
-                        echo '<p>' . 'タイトル：' . '<a href="thread.php?id=' . $array['id'] . '">' . $array['title'] . '</a>';
-                        echo '<br>' . '作成日時：' . $array['created'];
-                    }
-                }
-                ?>
             </div>
 
             <div class="content_left content_mypage">
-                <h3>---投稿したレス一覧（新着順）---</h3>
-                <p>削除ボタンを押すことで、レス内容がスレッドから削除されます。</p>
-                <?php
-                if ($loginJudge == 'ログイン中') {
-                    foreach ($resData as $resArray) {
-                        echo '<p>' . 'タイトル：' . '<a href="thread.php?id=' . $resArray['thread_id'] . '">' . $resArray['thread_title'] . '</a>';
-                        echo '<br>' . 'レス内容：' . $resArray['content'];
-                        echo '<br>' . '投稿日時：' . $resArray['created'] .
-                            '　<a class="content_res_delete" href="res_delete.php?id=' . $resArray['id'] . '">[削除]</a>';
-                    }
-                }
-                ?>
+                <h3><a href="mypage_res.php">投稿したレス一覧をみる</a></h3>
+                <p>あなたが投稿したレスを確認することができます。</p>
+                <p>削除ボタンを押すことで、レスを削除することができます。</p>
             </div>
-
-            <!-- <div class="content_form">
-                <form action="" method="POST">
-                    <p><input class="btn btn_small btn_blue" type="submit" name="res" value="レス投稿"></p>
-                </form>
-            </div> -->
 
         </div>
 
