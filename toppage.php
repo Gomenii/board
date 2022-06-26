@@ -25,21 +25,18 @@ $stmt->execute();
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // 不要なセッション情報の削除
-if ($loginJudge == 'ログイン中') {
-    if (isset($_SESSION['threadCsrfToken'])) {
-        unset($_SESSION['threadCsrfToken'], $_SESSION['title'], $_SESSION['content']);
-    }
-    if (isset($_SESSION['resCsrfToken'])) {
-        unset($_SESSION['resCsrfToken']);
-    }
-    if (isset($_SESSION['accountRegCsrfToken'])) {
-        unset($_SESSION['accountRegCsrfToken'], $_SESSION['newName'], $_SESSION['newPass']);
-    }
-    if (isset($_SESSION['loginCsrfToken'])) {
-        unset($_SESSION['loginCsrfToken']);
-    }
+if (isset($_SESSION['threadCsrfToken'])) {
+    unset($_SESSION['threadCsrfToken'], $_SESSION['title'], $_SESSION['content']);
 }
-var_dump($_SESSION);
+if (isset($_SESSION['resCsrfToken'])) {
+    unset($_SESSION['resCsrfToken']);
+}
+if (isset($_SESSION['accountRegCsrfToken'])) {
+    unset($_SESSION['accountRegCsrfToken'], $_SESSION['newName'], $_SESSION['newPass']);
+}
+if (isset($_SESSION['loginCsrfToken'])) {
+    unset($_SESSION['loginCsrfToken']);
+}
 ?>
 
 
