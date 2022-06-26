@@ -6,6 +6,7 @@ require_once('fanctions.php');
 // ログイン判定
 if (isset($_SESSION['loginName'])) {
     $loginJudge = 'ログイン中';
+    $errors[] = '※すでにログインしています。';
 } else {
     $loginJudge = '未ログイン';
 }
@@ -55,7 +56,7 @@ if (isset($postName)) {
     if (preg_match('/^[_]/', $postName)) {
         $errors[] = '※ユーザー名の先頭に _（アンダーバー）は使用できません。';
     }
-} else {
+} elseif (!isset($_SESSION['loginName'])) {
     $errors[] = '※ユーザー名を入力してください。';
 }
 
@@ -70,7 +71,7 @@ if (isset($postPass)) {
     if (preg_match('/^[!-\/:-@[-`{-~]/', $postPass)) {
         $errors[] = '※パスワードの先頭に記号は使用できません。';
     }
-} else {
+} elseif (!isset($_SESSION['loginName'])) {
     $errors[] = '※パスワードを入力してください。';
 }
 
