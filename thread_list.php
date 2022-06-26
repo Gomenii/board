@@ -19,35 +19,29 @@ if (isset($_SESSION['loginName'])) {
     $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
 }
 
-// スレッドの件数を取得
+// 全スレッドの件数を取得
 $stmt = $dbh->prepare('SELECT * FROM threads');
 $stmt->execute();
 $threadCount = $stmt->rowCount();
 
-echo $threadCount . '<br>';
-
+// 全スレッドの合計ページ数を計算（1ページ10件）
 $pageCount = ceil($threadCount / 10);
-echo $pageCount . '<br>';
 
-// 最新のスレッド10件のデータを取得
+// 現在のページ数を取得
 if (isset($_REQUEST['page'])) {
     $currentPage = $_REQUEST['page'];
 } else {
     $currentPage = 1;
 }
 
+// 現在のページ数によってDBから取得する開始行と行数を計算し、変数に格納
 $startLine = ($currentPage - 1) * 10;
 $getLine = 10;
 
-// echo $currentPage . '<br>';
-// echo $startLine . '<br>';
-// echo $getLine . '<br>';
-
+// 現在のページ数によってDBからスレッド情報を取得
 $stmt = $dbh->prepare('SELECT * FROM threads ORDER BY id DESC LIMIT ' . $startLine . ',' . $getLine);
 $stmt->execute();
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-var_dump($data);
 ?>
 
 
@@ -60,7 +54,7 @@ var_dump($data);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="sample text">
     <link rel="stylesheet" type="text/css" href="board.css">
-    <title>掲示板</title>
+    <title>スレッド一覧</title>
     <script type="text/javascript">
         window.addEventListener('DOMContentLoaded', () => {
             const btn = document.querySelector('.menu_btn');
@@ -126,31 +120,33 @@ var_dump($data);
                 $backPage = $currentPage - 1;
 
                 if ($currentPage != 1) {
-                    echo '<a href="thread_list.php"><button class="btn" type="button">最初のページヘ</button></a>';
+                    echo '<a href="thread_list.php"><button class="btn btn_small" type="button">◀最初ヘ</button></a>';
                 }
 
                 if ($currentPage == 1) {
-                    echo '<a href="thread_list.php?page=2"><button class="btn btn_blue" type="button">次のページヘ</button></a>';
+                    echo '<a href="thread_list.php?page=2"><button class="btn btn_small btn_blue" type="button">次ヘ</button></a>';
                 } elseif ($currentPage == $pageCount) {
-                    echo '<a href="thread_list.php?page=' . $backPage . '"><button class="btn btn_blue" type="button">前のページヘ</button></a>';
+                    echo '<a href="thread_list.php?page=' . $backPage . '"><button class="btn btn_small btn_blue" type="button">前ヘ</button></a>';
                 } else {
-                    echo '<a href="thread_list.php?page=' . $backPage . '"><button class="btn btn_blue" type="button">前のページヘ</button></a>
-                          <a href="thread_list.php?page=' . $nextPage . '"><button class="btn btn_blue" type="button">次のページヘ</button></a>';
+                    echo '<a href="thread_list.php?page=' . $backPage . '"><button class="btn btn_small btn_blue" type="button">前ヘ</button></a>
+                          <a href="thread_list.php?page=' . $nextPage . '"><button class="btn btn_small btn_blue" type="button">次ヘ</button></a>';
                 }
 
                 if ($currentPage != $pageCount) {
-                    echo '<a href="thread_list.php?page=' . $pageCount . '"><button class="btn" type="button">最後のページヘ</button></a>';
+                    echo '<a href="thread_list.php?page=' . $pageCount . '"><button class="btn btn_small" type="button">最後ヘ▶</button></a>';
                 }
 
                 echo '<p>ページ：' . $currentPage . ' / ' . $pageCount . '</p>';
             }
-            
+
             if (isset($_SESSION['loginName'])) {
                 echo '<p><a href="new_thread.php"><button class="btn btn_blue" type="button">スレッド作成</button></a></p>';
             }
             ?>
             <p><a href="toppage.php"><button class="btn" type="button">トップページへ</button></a></p>
         </div>
+
+    </div>
 
 </body>
 
