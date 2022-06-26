@@ -1,3 +1,26 @@
+<?php
+session_start();
+require_once('db_board.php');
+require_once('fanctions.php');
+
+//　セッションタイムアウト判定
+if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
+    $_SESSION = array();
+    session_destroy();
+    $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
+}
+
+// ログイン判定
+if (isset($_SESSION['loginName'])) {
+    $loginJudge = 'ログイン中';
+    $_SESSION['start'] = time();
+} else {
+    $loginJudge = '未ログイン';
+    $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -28,6 +51,7 @@
     <div class="header">
         <h1 class="header_title"><a href="toppage.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
+        <p><?= $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
                 <li><a href="toppage.php">トップページ</a></li>
@@ -41,7 +65,7 @@
 
     <div class="main">
         <div class="head">
-            <h2 class="head_title">お問い合わせ</h2>
+            <h2 class="head_title">お問い合わせ（準備中）</h2>
         </div>
     </div>
 
