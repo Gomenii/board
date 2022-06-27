@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once('db_board.php');
-require_once('fanctions.php');
+require_once('../assets/db_board.php');
+require_once('../assets/fanctions.php');
 
 // ログイン判定
 if (isset($_SESSION['loginName'])) {
@@ -11,6 +11,7 @@ if (isset($_SESSION['loginName'])) {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -19,8 +20,8 @@ if (isset($_SESSION['loginName'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="sample text">
-    <link rel="stylesheet" type="text/css" href="board.css">
-    <title>不正なリクエスト</title>
+    <link rel="stylesheet" type="text/css" href="../assets/board.css">
+    <title>ログアウト完了</title>
     <script type="text/javascript">
         window.addEventListener('DOMContentLoaded', () => {
             const btn = document.querySelector('.menu_btn');
@@ -39,16 +40,16 @@ if (isset($_SESSION['loginName'])) {
 
 <body>
     <div class="header">
-        <h1 class="header_title"><a href="index.php">サンプル掲示板</a></h1>
+        <h1 class="header_title"><a href="../index.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
-        <p><?php echo $loginJudge; ?></p>
+        <p><?= $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
-                <li><a href="index.php">トップページ</a></li>
-                <li><a href="mypage.php">マイページ</a></li>
-                <li><a href="logout_cfm.php">ログアウト</a></li>
-                <li><a href="inquiry.php">お問い合わせ</a></li>
-                <li><a href="admin.php">運営者情報</a></li>
+                <li><a href="../index.php">トップページ</a></li>
+                <li><a href="../mypage/index.php">マイページ</a></li>
+                <li><a href="./logout_cfm.php">ログアウト</a></li>
+                <li><a href="./inquiry.php">お問い合わせ</a></li>
+                <li><a href="./admin.php">運営者情報</a></li>
             </ul>
         </nav>
     </div>
@@ -56,24 +57,19 @@ if (isset($_SESSION['loginName'])) {
     <div class="main">
 
         <div class="head">
-            <h2 class="head_title">不正なリクエスト</h2>
+            <h2 class="head_title">ログアウト完了</h2>
         </div>
 
         <div class="content">
-            <p>不正なリクエストを検知しました。</p>
-            <p>お手数ですが最初からやり直してください。</p>
+            <h4>ログアウトが完了しました。</h4>
         </div>
 
         <div class="bottom">
-            <a href="index.php">
-                <button class="btn" type="button">トップページへ</button>
-            </a>
-            <p><a href="login.php">
-                    <button class="btn" type="button">ログイン画面へ</button>
-                </a></p>
+            <a href="../index.php"><button class="btn" type="button">トップページへ</button></a>
         </div>
 
     </div>
+
 </body>
 
 </html>

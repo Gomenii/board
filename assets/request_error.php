@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once('db_board.php');
-require_once('fanctions.php');
+require_once('./db_board.php');
+require_once('./fanctions.php');
 
 // ログイン判定
 if (isset($_SESSION['loginName'])) {
@@ -19,8 +19,8 @@ if (isset($_SESSION['loginName'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="sample text">
-    <link rel="stylesheet" type="text/css" href="board.css">
-    <title>アカウント新規登録完了</title>
+    <link rel="stylesheet" type="text/css" href="./board.css">
+    <title>不正なリクエスト</title>
     <script type="text/javascript">
         window.addEventListener('DOMContentLoaded', () => {
             const btn = document.querySelector('.menu_btn');
@@ -39,16 +39,16 @@ if (isset($_SESSION['loginName'])) {
 
 <body>
     <div class="header">
-        <h1 class="header_title"><a href="index.php">サンプル掲示板</a></h1>
+        <h1 class="header_title"><a href="../index.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
-        <p><?= $loginJudge; ?></p>
+        <p><?php echo $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
-                <li><a href="index.php">トップページ</a></li>
-                <li><a href="mypage.php">マイページ</a></li>
-                <li><a href="logout_cfm.php">ログアウト</a></li>
-                <li><a href="inquiry.php">お問い合わせ</a></li>
-                <li><a href="admin.php">運営者情報</a></li>
+                <li><a href="../index.php">トップページ</a></li>
+                <li><a href="../mypage/index.php">マイページ</a></li>
+                <li><a href="../menu/logout_cfm.php">ログアウト</a></li>
+                <li><a href="../menu/inquiry.php">お問い合わせ</a></li>
+                <li><a href="../menu/admin.php">運営者情報</a></li>
             </ul>
         </nav>
     </div>
@@ -56,22 +56,24 @@ if (isset($_SESSION['loginName'])) {
     <div class="main">
 
         <div class="head">
-            <h2 class="head_title">アカウント新規登録完了</h2>
+            <h2 class="head_title">不正なリクエスト</h2>
         </div>
 
         <div class="content">
-                <h4>アカウントを登録しました。</h4>
-                <p>※ブラウザの戻るボタンなどで、前の画面に戻らないでください。</p>
+            <p>不正なリクエストを検知しました。</p>
+            <p>お手数ですが最初からやり直してください。</p>
         </div>
 
         <div class="bottom">
-            <a href="login.php">
-                <button class="btn btn_blue" type="button">ログイン画面へ</button>
+            <a href="../index.php">
+                <button class="btn" type="button">トップページへ</button>
             </a>
+            <p><a href="../menu/login.php">
+                    <button class="btn" type="button">ログイン画面へ</button>
+                </a></p>
         </div>
 
     </div>
-
 </body>
 
 </html>

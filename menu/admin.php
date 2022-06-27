@@ -1,13 +1,13 @@
 <?php
 session_start();
-require_once('db_board.php');
-require_once('fanctions.php');
+require_once('../assets/db_board.php');
+require_once('../assets/fanctions.php');
 
 //　セッションタイムアウト判定
 if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
     $_SESSION = array();
     session_destroy();
-    $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
+    $display = '時間が経過したため、ログイン状態が解除されました。<a href="./login.php">再ログイン</a>';
 }
 
 // ログイン判定
@@ -16,7 +16,7 @@ if (isset($_SESSION['loginName'])) {
     $_SESSION['start'] = time();
 } else {
     $loginJudge = '未ログイン';
-    $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
+    $display = '※投稿したりスレッドを作成するには、<a href="../account/index.php">新規登録</a>または<a href="./login.php">ログイン</a>が必要です。';
 }
 ?>
 
@@ -29,7 +29,7 @@ if (isset($_SESSION['loginName'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="sample text">
-    <link rel="stylesheet" type="text/css" href="board.css">
+    <link rel="stylesheet" type="text/css" href="../assets/board.css">
     <title>運営者情報</title>
     <script type="text/javascript">
         window.addEventListener('DOMContentLoaded', () => {
@@ -49,16 +49,16 @@ if (isset($_SESSION['loginName'])) {
 
 <body>
     <div class="header">
-        <h1 class="header_title"><a href="index.php">サンプル掲示板</a></h1>
+        <h1 class="header_title"><a href="../index.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
         <p><?= $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
-                <li><a href="index.php">トップページ</a></li>
-                <li><a href="mypage.php">マイページ</a></li>
-                <li><a href="logout_cfm.php">ログアウト</a></li>
-                <li><a href="inquiry.php">お問い合わせ</a></li>
-                <li><a href="admin.php">運営者情報</a></li>
+                <li><a href="../index.php">トップページ</a></li>
+                <li><a href="../mypage/index.php">マイページ</a></li>
+                <li><a href="./logout_cfm.php">ログアウト</a></li>
+                <li><a href="./inquiry.php">お問い合わせ</a></li>
+                <li><a href="./admin.php">運営者情報</a></li>
             </ul>
         </nav>
     </div>

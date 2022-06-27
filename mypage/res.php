@@ -1,13 +1,13 @@
 <?php
 session_start();
-require_once('db_board.php');
-require_once('fanctions.php');
+require_once('../assets/db_board.php');
+require_once('../assets/fanctions.php');
 
 //　セッションタイムアウト判定
 if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
     $_SESSION = array();
     session_destroy();
-    $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
+    $display = '時間が経過したため、ログイン状態が解除されました。<a href="../menu/login.php">再ログイン</a>';
 }
 
 // ログイン判定
@@ -16,7 +16,7 @@ if (isset($_SESSION['loginName'])) {
     $_SESSION['start'] = time();
 } else {
     $loginJudge = '未ログイン';
-    header('Location: login.php');
+    header('Location: ../menu/login.php');
     exit();
 }
 
@@ -52,10 +52,10 @@ if (empty($data)) {
     if ($currentPage == 1) {
         $message = '投稿したレスはまだありません。';
     } elseif ($currentPage == 2) {
-        header('Location: mypage_res.php');
+        header('Location: ./res.php');
         exit();
     } elseif ($currentPage > 2) {
-        header('Location: mypage_res.php?page=' . $currentPage - 1);
+        header('Location: ./res.php?page=' . $currentPage - 1);
         exit();
     }
 } else {
@@ -72,7 +72,7 @@ if (empty($data)) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="sample text">
-    <link rel="stylesheet" type="text/css" href="board.css">
+    <link rel="stylesheet" type="text/css" href="../assets/board.css">
     <title>投稿したレス一覧（新着順）</title>
     <script type="text/javascript">
         window.addEventListener('DOMContentLoaded', () => {
@@ -92,16 +92,16 @@ if (empty($data)) {
 
 <body>
     <div class="header">
-        <h1 class="header_title"><a href="index.php">サンプル掲示板</a></h1>
+        <h1 class="header_title"><a href="../index.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
         <p><?= $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
-                <li><a href="index.php">トップページ</a></li>
-                <li><a href="mypage.php">マイページ</a></li>
-                <li><a href="logout_cfm.php">ログアウト</a></li>
-                <li><a href="inquiry.php">お問い合わせ</a></li>
-                <li><a href="admin.php">運営者情報</a></li>
+                <li><a href="../index.php">トップページ</a></li>
+                <li><a href="./index.php">マイページ</a></li>
+                <li><a href="../menu/logout_cfm.php">ログアウト</a></li>
+                <li><a href="../menu/inquiry.php">お問い合わせ</a></li>
+                <li><a href="../menu/admin.php">運営者情報</a></li>
             </ul>
         </nav>
     </div>
@@ -124,10 +124,10 @@ if (empty($data)) {
             <div class="content_left content_mypage_res">
                 <?php
                 foreach ($data as $a) {
-                    echo '<p>' . 'タイトル：' . '<a href="thread.php?id=' . $a['thread_id'] . '">' . $a['thread_title'] . '</a></p>';
+                    echo '<p>' . 'タイトル：' . '<a href="../thread/thread.php?id=' . $a['thread_id'] . '">' . $a['thread_title'] . '</a></p>';
                     echo 'レス内容：' . $a['content'];
                     echo '<br>' . '投稿日時：' . $a['created'] .
-                        '　<a class="content_res_delete" href="res_delete.php?id=' . $a['id'] . '">[削除]</a>';
+                        '　<a class="content_res_delete" href="../assets/res_delete.php?id=' . $a['id'] . '">[削除]</a>';
                 }
                 ?>
             </div>
@@ -141,26 +141,26 @@ if (empty($data)) {
                 $backPage = $currentPage - 1;
 
                 if ($currentPage != 1) {
-                    echo '<a href="mypage_res.php"><button class="btn btn_small" type="button">◀最初ヘ</button></a>';
+                    echo '<a href="./res.php"><button class="btn btn_small" type="button">◀最初ヘ</button></a>';
                 }
 
                 if ($currentPage == 1) {
-                    echo '<a href="mypage_res.php?page=2"><button class="btn btn_small btn_blue" type="button">次ヘ</button></a>';
+                    echo '<a href="./res.php?page=2"><button class="btn btn_small btn_blue" type="button">次ヘ</button></a>';
                 } elseif ($currentPage == $pageCount) {
-                    echo '<a href="mypage_res.php?page=' . $backPage . '"><button class="btn btn_small btn_blue" type="button">前ヘ</button></a>';
+                    echo '<a href="./res.php?page=' . $backPage . '"><button class="btn btn_small btn_blue" type="button">前ヘ</button></a>';
                 } else {
-                    echo '<a href="mypage_res.php?page=' . $backPage . '"><button class="btn btn_small btn_blue" type="button">前ヘ</button></a>
-                          <a href="mypage_res.php?page=' . $nextPage . '"><button class="btn btn_small btn_blue" type="button">次ヘ</button></a>';
+                    echo '<a href="./res.php?page=' . $backPage . '"><button class="btn btn_small btn_blue" type="button">前ヘ</button></a>
+                          <a href="./res.php?page=' . $nextPage . '"><button class="btn btn_small btn_blue" type="button">次ヘ</button></a>';
                 }
 
                 if ($currentPage != $pageCount) {
-                    echo '<a href="mypage_res.php?page=' . $pageCount . '"><button class="btn btn_small" type="button">最後ヘ▶</button></a>';
+                    echo '<a href="./res.php?page=' . $pageCount . '"><button class="btn btn_small" type="button">最後ヘ▶</button></a>';
                 }
 
                 echo '<p>ページ：' . $currentPage . ' / ' . $pageCount . '</p>';
             }
             ?>
-            <p><a href="mypage.php">
+            <p><a href="./index.php">
                     <button class="btn" type="button">マイページへ</button></p>
             </a>
         </div>

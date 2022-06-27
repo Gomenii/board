@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once('db_board.php');
-require_once('fanctions.php');
+require_once('./db_board.php');
+require_once('./fanctions.php');
 
 // 返信先のレス情報取得
 $resId = $_REQUEST['id'];

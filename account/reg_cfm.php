@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once('db_board.php');
-require_once('fanctions.php');
+require_once('../assets/db_board.php');
+require_once('../assets/fanctions.php');
 
 // ログイン判定
 if (isset($_SESSION['loginName'])) {
@@ -15,14 +15,14 @@ if (!empty($_POST)) {
     if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['accountRegCsrfToken']) {
         $_SESSION = array();
         session_destroy();
-        header('Location: request.error.php');
+        header('Location: ../assets/request_error.php');
         exit();
     }
 }
 if (!isset($_SESSION['accountRegCsrfToken'])) {
     $_SESSION = array();
     session_destroy();
-    header('Location: request.error.php');
+    header('Location: ../assets/request_error.php');
     exit();
 }
 
@@ -38,7 +38,7 @@ if (!empty($_POST)) {
 
     $_SESSION = array();
     session_destroy();
-    header('Location: account_reg_cpl.php');
+    header('Location: ./reg_cpl.php');
     exit();
 }
 ?>
@@ -51,7 +51,7 @@ if (!empty($_POST)) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="sample text">
-    <link rel="stylesheet" type="text/css" href="board.css">
+    <link rel="stylesheet" type="text/css" href="../assets/board.css">
     <title>アカウント新規登録確認</title>
     <script type="text/javascript">
         window.addEventListener('DOMContentLoaded', () => {
@@ -71,16 +71,16 @@ if (!empty($_POST)) {
 
 <body>
     <div class="header">
-        <h1 class="header_title"><a href="index.php">サンプル掲示板</a></h1>
+        <h1 class="header_title"><a href="../index.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
         <p><?= $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
-                <li><a href="index.php">トップページ</a></li>
-                <li><a href="mypage.php">マイページ</a></li>
-                <li><a href="logout_cfm.php">ログアウト</a></li>
-                <li><a href="inquiry.php">お問い合わせ</a></li>
-                <li><a href="admin.php">運営者情報</a></li>
+                <li><a href="../index.php">トップページ</a></li>
+                <li><a href="../mypage/index.php">マイページ</a></li>
+                <li><a href="../menu/logout_cfm.php">ログアウト</a></li>
+                <li><a href="../menu/inquiry.php">お問い合わせ</a></li>
+                <li><a href="../menu/admin.php">運営者情報</a></li>
             </ul>
         </nav>
     </div>

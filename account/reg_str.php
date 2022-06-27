@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="sample text">
-    <link rel="stylesheet" type="text/css" href="board.css">
+    <link rel="stylesheet" type="text/css" href="../assets/board.css">
     <title>アカウント新規登録に使える文字</title>
     <script type="text/javascript">
         window.addEventListener('DOMContentLoaded', () => {
@@ -26,15 +26,15 @@
 
 <body>
     <div class="header">
-        <h1 class="header_title"><a href="index.php">サンプル掲示板</a></h1>
+        <h1 class="header_title"><a href="../index.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
         <nav class="menu_list">
             <ul>
-                <li><a href="index.php">トップページ</a></li>
-                <li><a href="mypage.php">マイページ</a></li>
-                <li><a href="logout_cfm.php">ログアウト</a></li>
-                <li><a href="inquiry.php">お問い合わせ</a></li>
-                <li><a href="admin.php">運営者情報</a></li>
+                <li><a href="../index.php">トップページ</a></li>
+                <li><a href="../mypage/index.php">マイページ</a></li>
+                <li><a href="../menu/logout_cfm.php">ログアウト</a></li>
+                <li><a href="../menu/inquiry.php">お問い合わせ</a></li>
+                <li><a href="../menu/admin.php">運営者情報</a></li>
             </ul>
         </nav>
     </div>
@@ -70,7 +70,7 @@
         </div>
 
         <div class="bottom">
-            <a href="account_reg.php">
+            <a href="./index.php">
                 <button class="btn" type="button">前の画面に戻る</button>
             </a>
         </div>

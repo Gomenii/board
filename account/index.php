@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once('db_board.php');
-require_once('fanctions.php');
+require_once('../assets/db_board.php');
+require_once('../assets/fanctions.php');
 
 // ログイン判定
 if (isset($_SESSION['loginName'])) {
@@ -15,7 +15,7 @@ if (!empty($_POST)) {
     if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['accountRegCsrfToken']) {
         $_SESSION = array();
         session_destroy();
-        header('Location: request.error.php');
+        header('Location: ../assets/request_error.php');
         exit();
     }
 }
@@ -54,7 +54,7 @@ if (isset($postName)) {
     }
     if (preg_match('/[^a-zA-Z0-9_]/', $postName)) {
         $errors[] = '※ユーザー名に入力が不可能な文字が含まれています。<br>
-                    （入力可能な文字は<a href="account_reg_str.php" target="_blank" rel="noopener noreferrer">こちら</a>を参考にしてください。）';
+                    （入力可能な文字は<a href="./reg_str.php" target="_blank" rel="noopener noreferrer">こちら</a>を参考にしてください。）';
     }
     if (preg_match('/^[_]/', $postName)) {
         $errors[] = '※ユーザー名の先頭に _（アンダーバー）は使用できません。';
@@ -83,7 +83,7 @@ if (isset($postPass)) {
     }
     if (preg_match('/[^!-~]/', $postPass)) {
         $errors[] = '※パスワードに入力が不可能な文字が含まれています。<br>
-                    （入力可能な文字は<a href="account_reg_str.php" target="_blank" rel="noopener noreferrer">こちら</a>を参考にしてください。）';
+                    （入力可能な文字は<a href="./reg_str.php" target="_blank" rel="noopener noreferrer">こちら</a>を参考にしてください。）';
     }
     if (preg_match('/^[!-\/:-@[-`{-~]/', $postPass)) {
         $errors[] = '※パスワードの先頭に記号は使用できません。';
@@ -96,7 +96,7 @@ if (isset($postPass)) {
 if (!isset($errors)) {
     $_SESSION['newName'] = $postName;
     $_SESSION['newPass'] = $postPass;
-    header('location: account_reg_cfm.php');
+    header('location: ./reg_cfm.php');
     exit();
 }
 ?>
@@ -110,7 +110,7 @@ if (!isset($errors)) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="sample text">
-    <link rel="stylesheet" type="text/css" href="board.css">
+    <link rel="stylesheet" type="text/css" href="../assets/board.css">
     <title>アカウント新規登録</title>
     <script type="text/javascript">
         window.addEventListener('DOMContentLoaded', () => {
@@ -130,16 +130,16 @@ if (!isset($errors)) {
 
 <body>
     <div class="header">
-        <h1 class="header_title"><a href="index.php">サンプル掲示板</a></h1>
+        <h1 class="header_title"><a href="../index.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
         <p><?= $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
-                <li><a href="index.php">トップページ</a></li>
-                <li><a href="mypage.php">マイページ</a></li>
-                <li><a href="logout_cfm.php">ログアウト</a></li>
-                <li><a href="inquiry.php">お問い合わせ</a></li>
-                <li><a href="admin.php">運営者情報</a></li>
+                <li><a href="../index.php">トップページ</a></li>
+                <li><a href="../mypage/index.php">マイページ</a></li>
+                <li><a href="../menu/logout_cfm.php">ログアウト</a></li>
+                <li><a href="../menu/inquiry.php">お問い合わせ</a></li>
+                <li><a href="../menu/admin.php">運営者情報</a></li>
             </ul>
         </nav>
     </div>
@@ -169,7 +169,7 @@ if (!isset($errors)) {
 
         <div class="content_left">
             <h4>【注意事項】</h4>
-            <p>※登録に使用できる文字は<a href="account_reg_str.php" target="_blank" rel="noopener noreferrer">こちら</a>を参考にしてください。</p>
+            <p>※登録に使用できる文字は<a href="./reg_str.php" target="_blank" rel="noopener noreferrer">こちら</a>を参考にしてください。</p>
             <p>※ユーザー名とパスワードは、同じものを使用しないでください。</p>
             <p>※ユーザー名とパスワードは、電話番号や誕生日などの個人情報を使用しないでください。</p>
             <p>※パスワードは、第三者に推測されやすいものを使用しないでください。（passwordやabcd1234など）</p>

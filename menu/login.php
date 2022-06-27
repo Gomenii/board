@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once('db_board.php');
-require_once('fanctions.php');
+require_once('../assets/db_board.php');
+require_once('../assets/fanctions.php');
 
 // ログイン判定
 if (isset($_SESSION['loginName'])) {
@@ -16,7 +16,7 @@ if (!empty($_POST)) {
     if (!isset($_POST['token']) || $_POST['token'] !== $_SESSION['loginCsrfToken']) {
         $_SESSION = array();
         session_destroy();
-        header('Location: request.error.php');
+        header('Location: ../assets/request_error.php');
         exit();
     }
 }
@@ -102,7 +102,7 @@ if (isset($passMatch)) {
         setcookie('loginName', $_POST['name'], time() + 60 * 60 * 24);
         setcookie('loginPass', $_POST['pass'], time() + 60 * 60 * 24);
         unset($_SESSION['loginCsrfToken']);
-        header('Location: index.php');
+        header('Location: ../index.php');
         exit();
     } else {
         $errors[] = '※ユーザー名またはパスワードが違います。';
@@ -119,7 +119,7 @@ if (isset($passMatch)) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="sample text">
-    <link rel="stylesheet" type="text/css" href="board.css">
+    <link rel="stylesheet" type="text/css" href="../assets/board.css">
     <title>ログインする</title>
     <script type="text/javascript">
         window.addEventListener('DOMContentLoaded', () => {
@@ -140,16 +140,16 @@ if (isset($passMatch)) {
 <body>
 
     <div class="header">
-        <h1 class="header_title"><a href="index.php">サンプル掲示板</a></h1>
+        <h1 class="header_title"><a href="../index.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
         <p><?= $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
-                <li><a href="index.php">トップページ</a></li>
-                <li><a href="mypage.php">マイページ</a></li>
-                <li><a href="logout_cfm.php">ログアウト</a></li>
-                <li><a href="inquiry.php">お問い合わせ</a></li>
-                <li><a href="admin.php">運営者情報</a></li>
+                <li><a href="../index.php">トップページ</a></li>
+                <li><a href="../mypage/index.php">マイページ</a></li>
+                <li><a href="./logout_cfm.php">ログアウト</a></li>
+                <li><a href="./inquiry.php">お問い合わせ</a></li>
+                <li><a href="./admin.php">運営者情報</a></li>
             </ul>
         </nav>
     </div>
@@ -182,7 +182,7 @@ if (isset($passMatch)) {
                 <p><input class="btn btn_small btn_blue" type="submit" name="login" value="ログイン"></p>
             </form>
             <p class="margin_bottom_0">はじめての方はこちら</p>
-            <a href="account_reg.php">
+            <a href="../account/index.php">
                 <button class="btn btn_small btn_blue" type="button">新規登録</button>
             </a></p>
         </div>

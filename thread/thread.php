@@ -1,13 +1,13 @@
 <?php
 session_start();
-require_once('db_board.php');
-require_once('fanctions.php');
+require_once('../assets/db_board.php');
+require_once('../assets/fanctions.php');
 
 //　セッションタイムアウト判定
 if (isset($_SESSION['loginName']) && time() - $_SESSION['start'] > 600) {
     $_SESSION = array();
     session_destroy();
-    $display = '時間が経過したため、ログイン状態が解除されました。<a href="login.php">再ログイン</a>';
+    $display = '時間が経過したため、ログイン状態が解除されました。<a href="../menu/login.php">再ログイン</a>';
 }
 
 // ログイン判定
@@ -16,7 +16,7 @@ if (isset($_SESSION['loginName'])) {
     $_SESSION['start'] = time();
 } else {
     $loginJudge = '未ログイン';
-    $display = '※投稿したりスレッドを作成するには、<a href="account_reg.php">新規登録</a>または<a href="login.php">ログイン</a>が必要です。';
+    $display = '※投稿したりスレッドを作成するには、<a href="../account/index.php">新規登録</a>または<a href="../menu/login.php">ログイン</a>が必要です。';
 }
 
 // ログインエラー処理・リクエストエラー処理
@@ -27,7 +27,7 @@ if (!empty($_POST)) {
     if (!isset($_POST["token"]) || $_POST["token"] !== $_SESSION['resCsrfToken']) {
         $_SESSION = array();
         session_destroy();
-        header('Location: request.error.php');
+        header('Location: ../assets/request_error.php');
         exit();
     }
 }
@@ -102,7 +102,7 @@ if (!isset($errors) && !empty($_POST)) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="sample text">
-    <link rel="stylesheet" type="text/css" href="board.css">
+    <link rel="stylesheet" type="text/css" href="../assets/board.css">
     <title><?= $data['title'] ?></title>
     <script type="text/javascript">
         window.addEventListener('DOMContentLoaded', () => {
@@ -122,16 +122,16 @@ if (!isset($errors) && !empty($_POST)) {
 
 <body>
     <div class="header">
-        <h1 class="header_title"><a href="index.php">サンプル掲示板</a></h1>
+        <h1 class="header_title"><a href="../index.php">サンプル掲示板</a></h1>
         <button class="menu_btn">Menu</button>
         <p><?= $loginJudge; ?></p>
         <nav class="menu_list">
             <ul>
-                <li><a href="index.php">トップページ</a></li>
-                <li><a href="mypage.php">マイページ</a></li>
-                <li><a href="logout_cfm.php">ログアウト</a></li>
-                <li><a href="inquiry.php">お問い合わせ</a></li>
-                <li><a href="admin.php">運営者情報</a></li>
+                <li><a href="../index.php">トップページ</a></li>
+                <li><a href="../mypage/index.php">マイページ</a></li>
+                <li><a href="../menu/logout_cfm.php">ログアウト</a></li>
+                <li><a href="../menu/inquiry.php">お問い合わせ</a></li>
+                <li><a href="../menu/admin.php">運営者情報</a></li>
             </ul>
         </nav>
     </div>
@@ -178,9 +178,9 @@ if (!isset($errors) && !empty($_POST)) {
                         $resCount -= 1;
 
                         // レス内容出力処理（自分のレスの場合は削除ボタン表示）
-                        echo '[<a class="" href="res_reply.php?id=' . $rd['id'] . '">' . $rd['number'] . '</a>] 投稿者:<b>' . $rd['name'] . '</b>　投稿日時:' . $rd['created'];
+                        echo '[<a href="../assets/res_reply.php?id=' . $rd['id'] . '">' . $rd['number'] . '</a>] 投稿者:<b>' . $rd['name'] . '</b>　投稿日時:' . $rd['created'];
                         if (isset($_SESSION['loginName']) && $_SESSION['loginName'] === $rd['name']) {
-                            echo '　<a class="content_res_delete" href="res_delete.php?id=' . $rd['id'] . '">[削除]</a>';
+                            echo '　<a class="content_res_delete" href="../assets/res_delete.php?id=' . $rd['id'] . '">[削除]</a>';
                         }
                         echo '<p>' . $rd['content'] . '</p>';
                     }
@@ -214,7 +214,7 @@ if (!isset($errors) && !empty($_POST)) {
         </div>
 
         <div class="bottom">
-            <p><a href="thread_list.php">
+            <p><a href="./index.php">
                     <button class="btn" type="button">スレッド一覧へ</button>
                 </a></p>
         </div>
